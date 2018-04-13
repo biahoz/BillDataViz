@@ -1,30 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Data Viz</title>
+    <meta charset="utf-8">
+    <title>Simple Template</title>
+    <link rel="stylesheet" href="style.css">
 
-      <!--jQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- D3 -->
-    <script type="text/javascript" src="d3/d3.v3.min.js"></script>
-    <!-- NVD3 -->
-    <link href="nvd3/nv.d3.min.css" rel="stylesheet">
-    <script src="nvd3/nv.d3.min.js"></script>
-    <!-- AOS CSS -->
-    <link rel="stylesheet" href="aos/aos.css"/>
-    <!-- Viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <style>
 
-    <!-- Custom Styles -->
-    <link rel="stylesheet" type="text/css" href="style.css">
+        body {
+            font: 10px sans-serif;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: grey;
+        }
+
+        svg {
+            background-color: black;
+        }
+
+        .content {
+            /* fill: rgba(255,255,255,0.5); */
+        }
+
+        .label {
+            fill: white;
+            font-size: x-large;
+            font-weight: bolder;
+        }
+
+    </style> -->
 </head>
-<body>
-Hello World! What's up?
 
-<!-- Custom Javascript -->
-<script src="main.js" type="text/javascript"></script>
+<body>
+
+    <div class="outerwrapper">
+
+        <div class="timeline">
+            <div class="timeline-header">
+                <h2>
+                    <span class="timeline-heading"></span>
+                </h2>
+                <p class="timeline-standfirst"></p>
+            </div>
+            <div class="tooltip">
+                <p></p>
+            </div>
+        </div>
+        <!-- timeline -->
+
+        <div class="info-box">
+            <div class="panel"></div>
+        </div>
+
+    </div>
+    <!-- outerwrapper -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="script.js"></script>
+
+
 </body>
+
 </html>
