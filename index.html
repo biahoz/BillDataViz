@@ -1,30 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Data Viz</title>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <style>
+  body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0; }
 
-      <!--jQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <!-- D3 -->
-    <script type="text/javascript" src="d3/d3.v3.min.js"></script>
-    <!-- NVD3 -->
-    <link href="nvd3/nv.d3.min.css" rel="stylesheet">
-    <script src="nvd3/nv.d3.min.js"></script>
-    <!-- AOS CSS -->
-    <link rel="stylesheet" href="aos/aos.css"/>
-    <!-- Viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+.line {
+      fill: none;
+      stroke: gray;
+      stroke-width: 2px;
+}
 
-    <!-- Custom Styles -->
-    <link rel="stylesheet" type="text/css" href="style.css">
+.axislabel {
+    font: 12px sans-serif;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 60px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  /*pointer-events: none;*/
+}
+
+
+  </style>
 </head>
-<body>
-Hello World! What's up?
 
-<!-- Custom Javascript -->
-<script src="main.js" type="text/javascript"></script>
+<body>
+  <div id="result"></div>
+  <script>
+    // set the dimensions and margins of the graph
+    var margin = {top: 20, right: 20, bottom: 120, left: 70},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+    // parse the date / time
+    var parseTime = d3.timeParse("%Y-%m-%d");
+
+    //format date data
+    var formatTime = d3.timeFormat("%b %d");
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// define the line
+var valueline = d3.line()
+.x(function(d) { return x(d.latest_major_action_date); })
+.y(function(d) { return y(d.cosponsors); });
+
+//set color
+var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+.attr("width", width + margin.left + margin.right)
+.attr("height", height + margin.top + margin.bottom)
+.append("g")
+.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+d3.json("/test.json", function(error, data) {
+    if (error) throw error;
+
+    //loop through bills
+    data.results[0].bills.forEach (function(d) {
+      // result.innerText = result.innerText + d.latest_major_action_date + "\n"+ d.cosponsors + "\n";
+      //get relevant data points
+      //parse into appropriate data formats
+      d.introduced_date = parseTime(d.introduced_date);
+      d.latest_major_action_date = parseTime(d.latest_major_action_date);
+      d.cosponsors = +d.cosponsors;
+      d.sponsor_party = d.sponsor_party; //idk what to do with text?
+  });
+
+        // Scale the range of the data
+        x.domain(d3.extent(data.results[0].bills, function(d) { return d.latest_major_action_date; }));
+        y.domain([0, d3.max(data.results[0].bills, function(d) { return d.cosponsors; })]);
+
+
+
+  //test print
+  console.log(data.results[0].bills[0].cosponsors);
+
+  // Add the valueline path.
+  svg.append("path")
+      .data([data.results[0].bills])
+      .attr("class", "line")
+      .attr("d", valueline);
+
+
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+// Add the scatterplot
+  svg.selectAll("dot")
+      .data(data.results[0].bills)
+      .enter().append("circle")
+      .attr("r", 5)
+      .attr("cx", function(d) { return x(d.latest_major_action_date); })
+      .attr("cy", function(d) { return y(d.cosponsors); })
+      //change color of dot
+      .style("fill", function(d) {
+        if(d.sponsor_party == "D") {return "darkblue";}
+        else {return "darkred";}
+       })
+      .on("mouseover", function(d) {
+       div.transition()
+         .duration(200)
+         .style("opacity", .9);
+        //content of tooltip
+       div.html(formatTime(d.latest_major_action_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\">Link</a>")
+         .style("left", (d3.event.pageX) + "px")
+         .style("top", (d3.event.pageY - 28) + "px");
+       });
+
+  // Add the X Axis
+  svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x)
+              .tickFormat(d3.timeFormat("%b %d")))
+      .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "-.8em")
+        .attr("dy", ".15em")
+        .attr("transform", "rotate(-65)");
+
+// text label for the x axis
+  svg.append("text")
+      .attr("class", "axislabel")
+      .attr("x", width / 2 )
+      .attr("y",  height + margin.top + 50)
+      .style("text-anchor", "middle")
+      .text("Latest Major Action Date");
+
+  // Add the Y Axis
+  svg.append("g")
+  .call(d3.axisLeft(y));
+
+// text label for the y axis
+svg.append("text")
+      .attr("class", "axislabel")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Co-Sponsors");
+})
+</script>
+
 </body>
-</html>
