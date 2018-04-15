@@ -68,7 +68,7 @@ var svg = d3.select("body").append("svg")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("/test.json", function(error, data) {
+d3.json("test.json", function(error, data) {
     if (error) throw error;
 
     //loop through bills
