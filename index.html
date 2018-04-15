@@ -119,7 +119,7 @@ var div = d3.select("body").append("div")
          .duration(200)
          .style("opacity", .9);
         //content of tooltip
-       div.html(formatTime(d.latest_major_action_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\">Link</a>")
+       div.html(formatTime(d.latest_major_action_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
          .style("left", (d3.event.pageX) + "px")
          .style("top", (d3.event.pageY - 28) + "px");
        });
