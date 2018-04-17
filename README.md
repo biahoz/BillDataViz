@@ -6,4 +6,4 @@ By Emily Deng, Zohaib Khan, and Nika (Xueting) Zhang
 
 HCII, CMU, Spring 2019
 
-Link: <a href="https://emilywdeng.github.io/datavizrepo/">https://emilywdeng.github.io/datavizrepo/</a>
+Project Site: <a href="https://emilywdeng.github.io/datavizrepo/" target="_blank">https://emilywdeng.github.io/datavizrepo/</a>
