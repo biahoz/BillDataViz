@@ -33,18 +33,18 @@ div.tooltip {
 </head>
 
 <body>
-  <div id="result"></div>
+  <a href = "/index-test.html">Link to Test Data</a> <br>
   <script>
     // set the dimensions and margins of the graph
     var margin = {top: 20, right: 20, bottom: 120, left: 70},
-    width = 960 - margin.left - margin.right,
+    width = 1300 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
     // parse the date / time
     var parseTime = d3.timeParse("%Y-%m-%d");
 
     //format date data
-    var formatTime = d3.timeFormat("%b %d");
+    var formatTime = d3.timeFormat("%b %d %Y");
 
 // set the ranges
 var x = d3.scaleTime().range([0, width]);
@@ -68,32 +68,32 @@ var svg = d3.select("body").append("svg")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("test.json", function(error, data) {
+d3.json("allData.json", function(error, data) {
     if (error) throw error;
 
     //loop through bills
-    data.results[0].bills.forEach (function(d) {
+    data.forEach (function(d) {
       // result.innerText = result.innerText + d.latest_major_action_date + "\n"+ d.cosponsors + "\n";
       //get relevant data points
       //parse into appropriate data formats
       d.introduced_date = parseTime(d.introduced_date);
       d.latest_major_action_date = parseTime(d.latest_major_action_date);
       d.cosponsors = +d.cosponsors;
-      d.sponsor_party = d.sponsor_party; //idk what to do with text?
+      d.sponsor_party = d.sponsor_party;
   });
 
         // Scale the range of the data
-        x.domain(d3.extent(data.results[0].bills, function(d) { return d.latest_major_action_date; }));
-        y.domain([0, d3.max(data.results[0].bills, function(d) { return d.cosponsors; })]);
+        x.domain(d3.extent(data, function(d) { return d.latest_major_action_date; }));
+        y.domain([0, d3.max(data, function(d) { return d.cosponsors; })]);
 
 
 
   //test print
-  console.log(data.results[0].bills[0].cosponsors);
+  console.log(data[0].cosponsors);
 
   // Add the valueline path.
   svg.append("path")
-      .data([data.results[0].bills])
+      .data([data])
       .attr("class", "line")
       .attr("d", valueline);
 
@@ -104,7 +104,7 @@ var div = d3.select("body").append("div")
 
 // Add the scatterplot
   svg.selectAll("dot")
-      .data(data.results[0].bills)
+      .data(data)
       .enter().append("circle")
       .attr("r", 5)
       .attr("cx", function(d) { return x(d.latest_major_action_date); })
@@ -129,7 +129,8 @@ var div = d3.select("body").append("div")
       .attr("class", "axis")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x)
-              .tickFormat(d3.timeFormat("%b %d")))
+              .ticks(d3.timeMonth.every(3))
+              .tickFormat(d3.timeFormat("%b %Y")))
       .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "-.8em")
@@ -140,7 +141,7 @@ var div = d3.select("body").append("div")
   svg.append("text")
       .attr("class", "axislabel")
       .attr("x", width / 2 )
-      .attr("y",  height + margin.top + 50)
+      .attr("y",  height + margin.top + 70)
       .style("text-anchor", "middle")
       .text("Latest Major Action Date");
 
