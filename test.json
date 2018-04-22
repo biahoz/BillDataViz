@@ -1,14 +1,4 @@
-{
-   "status":"OK",
-   "copyright":"Copyright (c) 2018 Pro Publica Inc. All Rights Reserved.",
-   "results":[
-      {
-         
-         
-         "num_results": 20,
-         "offset": 0,
-         "bills": [
-              {
+[{
                  "bill_id": "hr5164-115",
                  "bill_slug": "hr5164",
                  "bill_type": "hr",
@@ -709,6 +699,3 @@
                  "latest_major_action": "Referred to the House Committee on Education and the Workforce."
               }
              ]
-      }
-   ]
-}
