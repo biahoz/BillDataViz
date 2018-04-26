@@ -9,7 +9,7 @@
 .line {
       fill: none;
       stroke: black;
-      stroke-width: 4px;
+      stroke-width: 2px;
 }
 
 .axis line, .axis path{
@@ -61,24 +61,250 @@ div.tooltip {
 
 
 
-    //function to determine status
-    function getStatus(introduced_date, house_passage, senate_passage, enacted, vetoed) {
+    // //function to determine status
+    // function getEndStatus(introduced_date, house_passage, senate_passage, enacted, vetoed) {
+    //   if (vetoed != null) {
+    //     return "Vetoed";
+    //   }
+    //   else if (enacted != null) {
+    //     return "Enacted";
+    //   }
+    //   else if (senate_passage != null) {
+    //     return "Passed Senate";
+    //   }
+    //   else if (house_passage != null) {
+    //     return "Passed House";
+    //   }
+    //   else {
+    //     return "Introduced";
+    //   }
+    // }
+
+    // function getEndDate(introduced_date, house_passage, senate_passage, enacted, vetoed) {
+    //   if (vetoed != null) {
+    //     return vetoed;
+    //   }
+    //   else if (enacted != null) {
+    //     return enacted;
+    //   }
+    //   else if (senate_passage != null) {
+    //     return senate_passage;
+    //   }
+    //   else if (house_passage != null) {
+    //     return house_passage;
+    //   }
+    //   else {
+    //     return introduced_date;
+    //   }
+    // }
+
+        //function to determine status
+    function getEndStatus(introduced_date, house_passage, senate_passage, enacted, vetoed) {
+      var d1 = new Date();
+      var d2 = new Date();
+
+      //create date array to store dates
+      var statusArray = [0,0,0,0];
+      //create var to store last date
+      var lastStatus;
+
+      //store introduced date
+      statusArray[0] = 'Introduced';
+      lastStatus = 'Introduced';
+
+      //check house passage
+      if (house_passage != null) {
+        //if present, store in array
+        statusArray[1] = 'Passed House';
+        //update last date
+        lastStatus = 'Passed House';
+      } else {
+        // else store last date
+        statusArray[1] = lastStatus;
+      }
+
+      if (senate_passage != null) {
+        statusArray[2] = 'Passed Senate';
+        lastStatus = 'Passed Senate';
+      } else {
+        statusArray[2] = lastStatus;
+      }
+
+      if (enacted != null) {
+        statusArray[3] = 'Enacted';
+        lastStatus = 'Enacted';
+      } else {
+        statusArray[3] = lastStatus;
+      }
+
       if (vetoed != null) {
-        return "Vetoed";
-      }
-      else if (enacted != null) {
-        return "Enacted";
-      }
-      else if (senate_passage != null) {
-        return "Passed Senate";
-      }
-      else if (house_passage != null) {
-        return "Passed House";
+        statusArray[3] = 'Vetoed';
+        lastStatus = 'Vetoed';
       }
       else {
-        return "Introduced";
+        statusArray[3] = lastStatus;
       }
+
+      return statusArray[3];
     }
+
+    function getEndDate(introduced_date, house_passage, senate_passage, enacted, vetoed) {
+      var d1 = new Date();
+      var d2 = new Date();
+
+      //create date array to store dates
+      var dateArray = [0,0,0,0];
+      //create var to store last date
+      var lastDate;
+
+      //store introduced date
+      dateArray[0] = introduced_date;
+      lastDate = introduced_date;
+
+      //check house passage
+      if (house_passage != null) {
+        //if present, store in array
+        dateArray[1] = house_passage;
+        //update last date
+        lastDate = house_passage;
+      } else {
+        // else store last date
+        dateArray[1] = lastDate;
+      }
+
+      if (senate_passage != null) {
+        dateArray[2] = senate_passage;
+        lastDate = senate_passage;
+      } else {
+        dateArray[2] = lastDate;
+      }
+
+      if (enacted != null) {
+        dateArray[3] = enacted;
+        lastDate = enacted;
+      } else {
+        dateArray[3] = lastDate;
+      }
+
+      if (vetoed != null) {
+        dateArray[3] = vetoed;
+        lastDate = vetoed;
+      }
+      else {
+        dateArray[3] = lastDate;
+      }
+
+      return dateArray[3];
+    }
+
+    function getDate(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
+      var d1 = new Date();
+      var d2 = new Date();
+
+      //create date array to store dates
+      var dateArray = [0,0,0,0];
+      //create var to store last date
+      var lastDate;
+
+      //store introduced date
+      dateArray[0] = introduced_date;
+      lastDate = introduced_date;
+
+      //check house passage
+      if (house_passage != null) {
+        //if present, store in array
+        dateArray[1] = house_passage;
+        //update last date
+        lastDate = house_passage;
+      } else {
+        // else store last date
+        dateArray[1] = lastDate;
+      }
+
+      if (senate_passage != null) {
+        dateArray[2] = senate_passage;
+        lastDate = senate_passage;
+      } else {
+        dateArray[2] = lastDate;
+      }
+
+      if (enacted != null) {
+        dateArray[3] = enacted;
+        lastDate = enacted;
+      } else {
+        dateArray[3] = lastDate;
+      }
+
+      if (vetoed != null) {
+        dateArray[3] = vetoed;
+        lastDate = vetoed;
+      }
+      else {
+        dateArray[3] = lastDate;
+      }
+
+      return dateArray[point];
+    }
+
+// ['Vetoed','Introduced', 'Passed House','Passed Senate','Enacted']
+
+    function getStatus(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
+      var d1 = new Date();
+      var d2 = new Date();
+
+      //create date array to store dates
+      var statusArray = [0,0,0,0];
+      //create var to store last date
+      var lastStatus;
+
+      //store introduced date
+      statusArray[0] = 'Introduced';
+      lastStatus = 'Introduced';
+
+      //check house passage
+      if (house_passage != null) {
+        //if present, store in array
+        statusArray[1] = 'Passed House';
+        //update last date
+        lastStatus = 'Passed House';
+      } else {
+        // else store last date
+        statusArray[1] = lastStatus;
+      }
+
+      if (senate_passage != null) {
+        statusArray[2] = 'Passed Senate';
+        lastStatus = 'Passed Senate';
+      } else {
+        statusArray[2] = lastStatus;
+      }
+
+      if (enacted != null) {
+        statusArray[3] = 'Enacted';
+        lastStatus = 'Enacted';
+      } else {
+        statusArray[3] = lastStatus;
+      }
+
+      if (vetoed != null) {
+        statusArray[3] = 'Vetoed';
+        lastStatus = 'Vetoed';
+      }
+      else {
+        statusArray[3] = lastStatus;
+      }
+
+      return statusArray[point];
+    }
+
+          //for each of 5 dates create a function
+      //1 always exists
+      //check if 2 exists, if yes then return
+      //if it doesn't exist, then return the last existing points
+      //redirect, and return the things before it
+      //veto may be a special case
+
+
 
 function getSizeByCosponsor(cosponsors) {
       var maxValue, maxCircleRadius;
@@ -123,46 +349,70 @@ d3.json("allData.json", function(error, data) {
     var lineCount;
 
     //loop through bills
+    //define every time, and
+    // grab dates we want and pass into the draw function
+    //draw every time
+    //everytime you create a line you put into array
+    //draw each line separately
+    //increment a counter
+    //add to a line array
     data.forEach (function(d) {
       //get relevant data points
       //parse into appropriate data formats
       d.bill_id = d.bill_id;
+      d.govtrack_url = d.govtrack_url;
+      d.number = d.number;
+      d.sponsor_party = d.sponsor_party;
+      d.active = d.active;
 
       d.introduced_date = parseTime(d.introduced_date); //for dates
       d.latest_major_action_date = parseTime(d.latest_major_action_date);
       d.house_passage = parseTime(d.house_passage);
+      d.senate_passage = parseTime(d.senate_passage);
+      d.enacted = parseTime(d.enacted);
+      d.vetoed = parseTime(d.vetoed);
 
       d.cosponsors = +d.cosponsors; //for numbers
-      d.sponsor_party = d.sponsor_party;
-      d.active = d.active;
 
       //user defined data points
       //calculate status
-      d["billStatus"] = getStatus(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      d["billStatus"] = getEndStatus(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
       //calculate radius
       d["radius"] = +getSizeByCosponsor(d.cosponsors);
 
-      //create array of dates to show
+      //create objects of points to show
+      var point0 = new Object();
       var point1 = new Object();
       var point2 = new Object();
       var point3 = new Object();
-      var point4 = new Object();
-      var point5 = new Object();
-      point1.billStatus = "Introduced";
-      point2.billStatus = "Passed House";
-      point3.billStatus = "Passed Senate";
-      point4.billStatus = "Enacted";
-      point5.billStatus = "Vetoed";
 
-      point1.date = d.introduced_date;
-      point2.date = d.house_passage;
+      //add properties to points
+      point0.billStatus = getStatus(0, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point1.billStatus = getStatus(1, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point2.billStatus = getStatus(2, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point3.billStatus = getStatus(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
 
-      //for each of 5 dates create a function
-      //1 always exists
-      //check if 2 exists, if yes then return
-      //if it doesn't exist, then return the last existing points
-      //redirect, and return the things before it
-      //veto may be a special case
+      point0.date = getDate(0, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point1.date = getDate(1, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point2.date = getDate(2, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point3.date = getDate(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+
+      point0.number = d.number;
+      point1.number = d.number;
+      point2.number = d.number;
+      point3.number = d.number;
+
+      point0.sponsor_party = d.sponsor_party;
+      point1.sponsor_party = d.sponsor_party;
+      point2.sponsor_party = d.sponsor_party;
+      point3.sponsor_party = d.sponsor_party;
+
+      point0.govtrack_url = d.govtrack_url;
+      point1.govtrack_url = d.govtrack_url;
+      point2.govtrack_url = d.govtrack_url;
+      point3.govtrack_url = d.govtrack_url;
+
+
 
       //separate function for bill status string
 
@@ -170,20 +420,25 @@ d3.json("allData.json", function(error, data) {
       // var showDates = [d.introduced_date, d.latest_major_action_date];
 
       var showDates = [];
+      showDates.push(point0);
       showDates.push(point1);
       showDates.push(point2);
+      showDates.push(point3);
+
+      console.log(showDates);
 
 
 
       // Scale the range of the data
         x.domain(d3.extent(data, function(d) {
-          // return d.introduced_date;
-           return d.date;
+          return d.introduced_date;
+           // return d.date;
         }));
         y.domain(['Vetoed','Introduced', 'Passed House','Passed Senate','Enacted']);
 
       // define the line
       var valueline = d3.line()
+      .curve(d3.curveBasis) //curve
       .x(function(d) { console.log(formatTime(d.date)); return x(d.date); })
       .y(function(d) { return y(d.billStatus); });
 
@@ -194,19 +449,21 @@ d3.json("allData.json", function(error, data) {
         svg.append("path")
             .datum(showDates) //pass an array of the dates
             .attr("class", "line")
-            .attr("d", valueline);
-            // .attr("id", "line1");
+            .attr("d", valueline)
+            .attr("id", "line1");
 
             lineArray.push(valueline);
 
         // Add the introduced scatterplot
      svg.selectAll("dot")
-      .data(showDates)
+      .data(showDates.filter(function(d, i){ return (d && i == 3) || (d && i == 0); }))
       .enter().append("circle")
       .attr("r", 5)
       // .attr("cx", function(d) { return x(d.introduced_date); })
-      .attr("cx", function(d) { return y(d.date); }) //call last function to default to end point
+      // .attr("cx", function(d) { return x(getEndDate(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed)); }) //call last function to default to end point
+      .attr("cx", function(d) { return x(d.date); })
       .attr("cy", function(d) { return y(d.billStatus); })
+      // .attr("cy", function(d) { return y(getEndStatus(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed)); })
       //change color of dot
       .style("fill", function(d) {
         if(d.sponsor_party == "D") {return "darkblue";}
@@ -220,7 +477,7 @@ d3.json("allData.json", function(error, data) {
          .style("opacity", .9);
         //content of tooltip
        // div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Introduced Date: " + formatTime(d.introduced_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-       div.html(formatTime(d.date) + "<br/>" + d.billStatus)
+       div.html(d.number + "<br/>" + formatTime(d.date) + "<br/>" + d.billStatus + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
          .style("left", (d3.event.pageX + 28) + "px")
          .style("top", (d3.event.pageY - 28) + "px");
          // //hover to select
@@ -234,15 +491,6 @@ d3.json("allData.json", function(error, data) {
        });
     }); //end loop
 
-
-    //in loop,
-    //define every time, and
-    // grab dates we want and pass into the draw function
-    //draw every time
-    //everytime you create a line you put into array
-    //draw each line separately
-    //increment a counter
-    //add to a line array
 
 
         // // Scale the range of the data
