@@ -43,8 +43,6 @@ div.tooltip {
 <body>
 
   <script>
-//find js library. convert to epoch10 and then convert it back
-
 
     // set the dimensions and margins of the graph
     var margin = {top: 50, right: 50, bottom: 150, left: 125},
@@ -60,45 +58,10 @@ div.tooltip {
     var formatTime = d3.timeFormat("%b %d %Y");
 
 
-
-    // //function to determine status
-    // function getEndStatus(introduced_date, house_passage, senate_passage, enacted, vetoed) {
-    //   if (vetoed != null) {
-    //     return "Vetoed";
-    //   }
-    //   else if (enacted != null) {
-    //     return "Enacted";
-    //   }
-    //   else if (senate_passage != null) {
-    //     return "Passed Senate";
-    //   }
-    //   else if (house_passage != null) {
-    //     return "Passed House";
-    //   }
-    //   else {
-    //     return "Introduced";
-    //   }
-    // }
-
-    // function getEndDate(introduced_date, house_passage, senate_passage, enacted, vetoed) {
-    //   if (vetoed != null) {
-    //     return vetoed;
-    //   }
-    //   else if (enacted != null) {
-    //     return enacted;
-    //   }
-    //   else if (senate_passage != null) {
-    //     return senate_passage;
-    //   }
-    //   else if (house_passage != null) {
-    //     return house_passage;
-    //   }
-    //   else {
-    //     return introduced_date;
-    //   }
-    // }
-
-        //function to determine status
+    //function to determine status
+      //1 always exists
+      //check if 2 exists, if yes then return
+      //if it doesn't exist, then return the last existing points
     function getEndStatus(introduced_date, house_passage, senate_passage, enacted, vetoed) {
       var d1 = new Date();
       var d2 = new Date();
@@ -112,22 +75,34 @@ div.tooltip {
       statusArray[0] = 'Introduced';
       lastStatus = 'Introduced';
 
-      //check house passage
-      if (house_passage != null) {
-        //if present, store in array
-        statusArray[1] = 'Passed House';
-        //update last date
-        lastStatus = 'Passed House';
-      } else {
-        // else store last date
+      //check cases for if house or senate is first
+      if (house_passage == null && senate_passage == null) {
+        //set both to lastDate
         statusArray[1] = lastStatus;
-      }
-
-      if (senate_passage != null) {
-        statusArray[2] = 'Passed Senate';
-        lastStatus = 'Passed Senate';
-      } else {
         statusArray[2] = lastStatus;
+      }
+      else if (house_passage != null && senate_passage == null) {
+          //if present, store in array
+          statusArray[1] = 'Passed House';
+          //update last date
+          lastStatus = 'Passed House';
+          statusArray[2] = lastStatus;
+      } else if (house_passage == null && senate_passage != null) {
+          //if present, store in array
+          statusArray[1] = 'Passed Senate';
+          //update last date
+          lastStatus = 'Passed Senate';
+          statusArray[2] = lastStatus;
+      } else if (house_passage != null && senate_passage != null) {
+          if (house_passage < senate_passage) {
+              statusArray[1] = 'Passed House';
+              statusArray[2] = 'Passed Senate';
+              lastStatus = 'Passed Senate';
+          } else {
+              statusArray[1] = 'Passed Senate';
+              statusArray[2] = 'Passed House';
+              lastStatus = 'Passed House';
+          }
       }
 
       if (enacted != null) {
@@ -161,22 +136,34 @@ div.tooltip {
       dateArray[0] = introduced_date;
       lastDate = introduced_date;
 
-      //check house passage
-      if (house_passage != null) {
-        //if present, store in array
-        dateArray[1] = house_passage;
-        //update last date
-        lastDate = house_passage;
-      } else {
-        // else store last date
+      //check cases for if house or senate is first
+      if (house_passage == null && senate_passage == null) {
+        //set both to lastDate
         dateArray[1] = lastDate;
-      }
-
-      if (senate_passage != null) {
-        dateArray[2] = senate_passage;
-        lastDate = senate_passage;
-      } else {
         dateArray[2] = lastDate;
+      }
+      else if (house_passage != null && senate_passage == null) {
+          //if present, store in array
+          dateArray[1] = house_passage;
+          //update last date
+          lastDate = house_passage;
+          dateArray[2] = lastDate;
+      } else if (house_passage == null && senate_passage != null) {
+          //if present, store in array
+          dateArray[1] = senate_passage;
+          //update last date
+          lastDate = senate_passage;
+          dateArray[2] = lastDate;
+      } else if (house_passage != null && senate_passage != null) {
+          if (house_passage < senate_passage) {
+              dateArray[1] = house_passage;
+              dateArray[2] = senate_passage;
+              lastDate = senate_passage;
+          } else {
+              dateArray[1] = senate_passage;
+              dateArray[2] = house_passage;
+              lastDate = house_passage;
+          }
       }
 
       if (enacted != null) {
@@ -198,8 +185,6 @@ div.tooltip {
     }
 
     function getDate(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
-      var d1 = new Date();
-      var d2 = new Date();
 
       //create date array to store dates
       var dateArray = [0,0,0,0];
@@ -210,22 +195,34 @@ div.tooltip {
       dateArray[0] = introduced_date;
       lastDate = introduced_date;
 
-      //check house passage
-      if (house_passage != null) {
-        //if present, store in array
-        dateArray[1] = house_passage;
-        //update last date
-        lastDate = house_passage;
-      } else {
-        // else store last date
+      //check cases for if house or senate is first
+      if (house_passage == null && senate_passage == null) {
+        //set both to lastDate
         dateArray[1] = lastDate;
-      }
-
-      if (senate_passage != null) {
-        dateArray[2] = senate_passage;
-        lastDate = senate_passage;
-      } else {
         dateArray[2] = lastDate;
+      }
+      else if (house_passage != null && senate_passage == null) {
+          //if present, store in array
+          dateArray[1] = house_passage;
+          //update last date
+          lastDate = house_passage;
+          dateArray[2] = lastDate;
+      } else if (house_passage == null && senate_passage != null) {
+          //if present, store in array
+          dateArray[1] = senate_passage;
+          //update last date
+          lastDate = senate_passage;
+          dateArray[2] = lastDate;
+      } else if (house_passage != null && senate_passage != null) {
+          if (house_passage < senate_passage) {
+              dateArray[1] = house_passage;
+              dateArray[2] = senate_passage;
+              lastDate = senate_passage;
+          } else {
+              dateArray[1] = senate_passage;
+              dateArray[2] = house_passage;
+              lastDate = house_passage;
+          }
       }
 
       if (enacted != null) {
@@ -246,8 +243,7 @@ div.tooltip {
       return dateArray[point];
     }
 
-// ['Vetoed','Introduced', 'Passed House','Passed Senate','Enacted']
-
+    // ['Vetoed','Introduced', 'Passed House','Passed Senate','Enacted']
     function getStatus(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
       var d1 = new Date();
       var d2 = new Date();
@@ -261,22 +257,34 @@ div.tooltip {
       statusArray[0] = 'Introduced';
       lastStatus = 'Introduced';
 
-      //check house passage
-      if (house_passage != null) {
-        //if present, store in array
-        statusArray[1] = 'Passed House';
-        //update last date
-        lastStatus = 'Passed House';
-      } else {
-        // else store last date
+      //check cases for if house or senate is first
+      if (house_passage == null && senate_passage == null) {
+        //set both to lastDate
         statusArray[1] = lastStatus;
-      }
-
-      if (senate_passage != null) {
-        statusArray[2] = 'Passed Senate';
-        lastStatus = 'Passed Senate';
-      } else {
         statusArray[2] = lastStatus;
+      }
+      else if (house_passage != null && senate_passage == null) {
+          //if present, store in array
+          statusArray[1] = 'Passed House';
+          //update last date
+          lastStatus = 'Passed House';
+          statusArray[2] = lastStatus;
+      } else if (house_passage == null && senate_passage != null) {
+          //if present, store in array
+          statusArray[1] = 'Passed Senate';
+          //update last date
+          lastStatus = 'Passed Senate';
+          statusArray[2] = lastStatus;
+      } else if (house_passage != null && senate_passage != null) {
+          if (house_passage < senate_passage) {
+              statusArray[1] = 'Passed House';
+              statusArray[2] = 'Passed Senate';
+              lastStatus = 'Passed Senate';
+          } else {
+              statusArray[1] = 'Passed Senate';
+              statusArray[2] = 'Passed House';
+              lastStatus = 'Passed House';
+          }
       }
 
       if (enacted != null) {
@@ -297,13 +305,6 @@ div.tooltip {
       return statusArray[point];
     }
 
-          //for each of 5 dates create a function
-      //1 always exists
-      //check if 2 exists, if yes then return
-      //if it doesn't exist, then return the last existing points
-      //redirect, and return the things before it
-      //veto may be a special case
-
 
 
 function getSizeByCosponsor(cosponsors) {
@@ -319,18 +320,9 @@ function getSizeByCosponsor(cosponsors) {
 
 // set the ranges
 var x = d3.scaleTime().range([0, width]);
-// var y = d3.scaleLinear().range([height, 0]);
 var y = d3.scalePoint().range([height, 0]);
-// var y = d3.scalePoint().domain(['True', 'False']).range([height, 0]);
 
 
-// // define the line
-// var valueline = d3.line()
-// .x(function(d) { return x(d.introduced_date); })
-// .y(function(d) { return y(d.billStatus); });
-
-//set color
-var color = d3.scaleOrdinal(d3.schemeCategory10);
 
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
@@ -412,21 +404,12 @@ d3.json("allData.json", function(error, data) {
       point2.govtrack_url = d.govtrack_url;
       point3.govtrack_url = d.govtrack_url;
 
-
-
-      //separate function for bill status string
-
-      // var showDates = [{"billStatus": d.billStatus, "date": d.introduced_date}, {"billStatus": d.billStatus, "date": d.latest_major_action_date}];
-      // var showDates = [d.introduced_date, d.latest_major_action_date];
-
+      //add points to array
       var showDates = [];
       showDates.push(point0);
       showDates.push(point1);
       showDates.push(point2);
       showDates.push(point3);
-
-      console.log(showDates);
-
 
 
       // Scale the range of the data
@@ -438,8 +421,8 @@ d3.json("allData.json", function(error, data) {
 
       // define the line
       var valueline = d3.line()
-      .curve(d3.curveBasis) //curve
-      .x(function(d) { console.log(formatTime(d.date)); return x(d.date); })
+      .curve(d3.curveCatmullRom) //curve
+      .x(function(d) { return x(d.date); })
       .y(function(d) { return y(d.billStatus); });
 
 
@@ -456,20 +439,18 @@ d3.json("allData.json", function(error, data) {
 
         // Add the introduced scatterplot
      svg.selectAll("dot")
-      .data(showDates.filter(function(d, i){ return (d && i == 3) || (d && i == 0); }))
+     // //filter to show only the first and last points
+      // .data(showDates.filter(function(d, i){ return (d && i == 3) || (d && i == 0); }))
+      .data(showDates)
       .enter().append("circle")
       .attr("r", 5)
-      // .attr("cx", function(d) { return x(d.introduced_date); })
-      // .attr("cx", function(d) { return x(getEndDate(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed)); }) //call last function to default to end point
       .attr("cx", function(d) { return x(d.date); })
       .attr("cy", function(d) { return y(d.billStatus); })
-      // .attr("cy", function(d) { return y(getEndStatus(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed)); })
       //change color of dot
       .style("fill", function(d) {
         if(d.sponsor_party == "D") {return "darkblue";}
         else {return "darkred";}
        })
-      //breaking tooltip?
       //hover function
       .on("mouseover", function(d) {
        div.transition()
@@ -492,101 +473,9 @@ d3.json("allData.json", function(error, data) {
     }); //end loop
 
 
-
-        // // Scale the range of the data
-        // x.domain(d3.extent(data, function(d) { return d.introduced_date; }));
-        // y.domain(['Vetoed','Introduced','Passed House','Passed Senate','Enacted']);
-
-
-
-
-  //test print
-  // console.log(this.billStatus);
-
-
-  //   // Add the valueline path.
-  // svg.append("path")
-  //     .data([data])
-  //     .attr("class", "line")
-  //     .attr("d", valueline)
-  //     .attr("id", "line2");
-
-
-
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
-
-
-// // Add the introduced scatterplot
-//   svg.selectAll("dot")
-//       .data(data)
-//       .enter().append("circle")
-//       .attr("r", function(d) {return d.radius;})
-//       .attr("cx", function(d) { return x(d.introduced_date); })
-//       .attr("cy", function(d) { return y(d.billStatus); })
-//       //change color of dot
-//       .style("fill", function(d) {
-//         if(d.sponsor_party == "D") {return "darkblue";}
-//         else {return "darkred";}
-//        })
-//       //hover function
-//       .on("mouseover", function(d) {
-//        div.transition()
-//          .duration(200)
-//          .style("opacity", .9);
-//         //content of tooltip
-//        div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Introduced Date: " + formatTime(d.introduced_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-//          .style("left", (d3.event.pageX + 28) + "px")
-//          .style("top", (d3.event.pageY - 28) + "px");
-//          // //hover to select
-//          // // Determine if current line is visible
-//          //  var active   = line1.active ? false : true,
-//          //    newOpacity = active ? 0 : 1;
-//          //  // Hide or show the elements
-//          //  d3.select("#line1").style("opacity", newOpacity);
-//          //  // Update whether or not the elements are active
-//          //  line1.active = active;
-//        });
-//       // //click function
-//       // .on("click", function(){
-//       // // Determine if current line is visible
-//       // var active   = line1.active ? false : true,
-//       //   newOpacity = active ? 0 : 1;
-//       // // Hide or show the elements
-//       // d3.select("#line1").style("opacity", newOpacity);
-//       // // Update whether or not the elements are active
-//       // line1.active = active; });
-
-// // Add the latest major action scatterplot
-//   svg.selectAll("dot")
-//       .data(data)
-//       .enter().append("circle")
-//       .attr("r", function(d) {return d.radius;})
-//       .attr("cx", function(d) { return x(d.latest_major_action_date); })
-//       .attr("cy", function(d) { return y(d.billStatus); })
-//       //change color of dot
-//       .style("fill", function(d) {
-//         if(d.sponsor_party == "D") {return "darkblue";}
-//         else {return "darkred";}
-//        })
-//       .on("mouseover", function(d) {
-//        div.transition()
-//          .duration(200)
-//          .style("opacity", .9);
-//         //content of tooltip
-//        div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Latest Major Action Date: " + formatTime(d.latest_major_action_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-//          .style("left", (d3.event.pageX) + "px")
-//          .style("top", (d3.event.pageY - 28) + "px");
-//          // //hover to select
-//          // // Determine if current line is visible
-//          //  var active   = line1.active ? false : true,
-//          //    newOpacity = active ? 0 : 1;
-//          //  // Hide or show the elements
-//          //  d3.select("#line1").style("opacity", newOpacity);
-//          //  // Update whether or not the elements are active
-//          //  line1.active = active;
-//        });
 
   // Add the X Axis
   svg.append("g")
