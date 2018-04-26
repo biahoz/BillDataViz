@@ -4,21 +4,21 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <style>
   body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0;
-      background-color: #3a3a3a;}
+      background-color: white;}
 
 .line {
       fill: none;
-      stroke: lightgray;
-      stroke-width: 2px;
+      stroke: black;
+      stroke-width: 4px;
 }
 
 .axis line, .axis path{
-    stroke: white;
+    /*stroke: white;*/
 }
 
 .axislabel {
     font: 16px sans-serif;
-    fill: white;
+    /*fill: white;*/
     stroke: none;
 }
 
@@ -29,10 +29,11 @@ div.tooltip {
   height: 100px;
   padding: 2px;
   font: 12px sans-serif;
-  color: white;
+  /*color: white;*/
   background: lightsteelblue;
   border: 0px;
-  border-radius: 8px;
+  /*border-radius: 8px*/
+  ;
 }
 
 
@@ -51,6 +52,8 @@ div.tooltip {
     height = 500 - margin.top - margin.bottom;
 
     // parse the date / time
+    var parseTime = d3.timeParse("%Y-%m-%d");
+
     var parseTime = d3.timeParse("%Y-%m-%d");
 
     //format date data
@@ -83,7 +86,7 @@ function getSizeByCosponsor(cosponsors) {
 
       var scale = d3.scaleSqrt()
       .domain([0, 300])
-      .range([5, 30]);
+      .range([2, 10]);
 
        return scale(cosponsors);
     }
@@ -95,10 +98,10 @@ var y = d3.scalePoint().range([height, 0]);
 // var y = d3.scalePoint().domain(['True', 'False']).range([height, 0]);
 
 
-// define the line
-var valueline = d3.line()
-.x(function(d) { return x(d.introduced_date); })
-.y(function(d) { return y(d.billStatus); });
+// // define the line
+// var valueline = d3.line()
+// .x(function(d) { return x(d.introduced_date); })
+// .y(function(d) { return y(d.billStatus); });
 
 //set color
 var color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -113,28 +116,138 @@ var svg = d3.select("body").append("svg")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("allActiveData_114_400.json", function(error, data) {
+d3.json("allData.json", function(error, data) {
     if (error) throw error;
+
+    var lineArray = [];
+    var lineCount;
 
     //loop through bills
     data.forEach (function(d) {
-      // var billStatus;
       //get relevant data points
       //parse into appropriate data formats
       d.bill_id = d.bill_id;
+
       d.introduced_date = parseTime(d.introduced_date); //for dates
       d.latest_major_action_date = parseTime(d.latest_major_action_date);
+      d.house_passage = parseTime(d.house_passage);
+
       d.cosponsors = +d.cosponsors; //for numbers
       d.sponsor_party = d.sponsor_party;
       d.active = d.active;
+
+      //user defined data points
+      //calculate status
       d["billStatus"] = getStatus(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      //calculate radius
       d["radius"] = +getSizeByCosponsor(d.cosponsors);
+
+      //create array of dates to show
+      var point1 = new Object();
+      var point2 = new Object();
+      var point3 = new Object();
+      var point4 = new Object();
+      var point5 = new Object();
+      point1.billStatus = "Introduced";
+      point2.billStatus = "Passed House";
+      point3.billStatus = "Passed Senate";
+      point4.billStatus = "Enacted";
+      point5.billStatus = "Vetoed";
+
+      point1.date = d.introduced_date;
+      point2.date = d.house_passage;
+
+      //for each of 5 dates create a function
+      //1 always exists
+      //check if 2 exists, if yes then return
+      //if it doesn't exist, then return the last existing points
+      //redirect, and return the things before it
+      //veto may be a special case
+
+      //separate function for bill status string
+
+      // var showDates = [{"billStatus": d.billStatus, "date": d.introduced_date}, {"billStatus": d.billStatus, "date": d.latest_major_action_date}];
+      // var showDates = [d.introduced_date, d.latest_major_action_date];
+
+      var showDates = [];
+      showDates.push(point1);
+      showDates.push(point2);
+
+
+
+      // Scale the range of the data
+        x.domain(d3.extent(data, function(d) {
+          // return d.introduced_date;
+           return d.date;
+        }));
+        y.domain(['Vetoed','Introduced', 'Passed House','Passed Senate','Enacted']);
+
+      // define the line
+      var valueline = d3.line()
+      .x(function(d) { console.log(formatTime(d.date)); return x(d.date); })
+      .y(function(d) { return y(d.billStatus); });
+
+
+      lineCount++;
+
+        // Add the valueline path.
+        svg.append("path")
+            .datum(showDates) //pass an array of the dates
+            .attr("class", "line")
+            .attr("d", valueline);
+            // .attr("id", "line1");
+
+            lineArray.push(valueline);
+
+        // Add the introduced scatterplot
+     svg.selectAll("dot")
+      .data(showDates)
+      .enter().append("circle")
+      .attr("r", 5)
+      // .attr("cx", function(d) { return x(d.introduced_date); })
+      .attr("cx", function(d) { return y(d.date); }) //call last function to default to end point
+      .attr("cy", function(d) { return y(d.billStatus); })
+      //change color of dot
+      .style("fill", function(d) {
+        if(d.sponsor_party == "D") {return "darkblue";}
+        else {return "darkred";}
+       })
+      //breaking tooltip?
+      //hover function
+      .on("mouseover", function(d) {
+       div.transition()
+         .duration(200)
+         .style("opacity", .9);
+        //content of tooltip
+       // div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Introduced Date: " + formatTime(d.introduced_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
+       div.html(formatTime(d.date) + "<br/>" + d.billStatus)
+         .style("left", (d3.event.pageX + 28) + "px")
+         .style("top", (d3.event.pageY - 28) + "px");
+         // //hover to select
+         // // Determine if current line is visible
+         //  var active   = line1.active ? false : true,
+         //    newOpacity = active ? 0 : 1;
+         //  // Hide or show the elements
+         //  d3.select("#line1").style("opacity", newOpacity);
+         //  // Update whether or not the elements are active
+         //  line1.active = active;
+       });
     }); //end loop
 
 
-        // Scale the range of the data
-        x.domain(d3.extent(data, function(d) { return d.introduced_date; }));
-        y.domain(['Vetoed','Introduced','Passed House','Passed Senate','Enacted']);
+    //in loop,
+    //define every time, and
+    // grab dates we want and pass into the draw function
+    //draw every time
+    //everytime you create a line you put into array
+    //draw each line separately
+    //increment a counter
+    //add to a line array
+
+
+        // // Scale the range of the data
+        // x.domain(d3.extent(data, function(d) { return d.introduced_date; }));
+        // y.domain(['Vetoed','Introduced','Passed House','Passed Senate','Enacted']);
 
 
 
@@ -142,19 +255,13 @@ d3.json("allActiveData_114_400.json", function(error, data) {
   //test print
   // console.log(this.billStatus);
 
-  // Add the valueline path.
-  svg.append("path")
-      .data([data])
-      .attr("class", "line")
-      .attr("d", valueline)
-      .attr("id", "line1");
 
-    // Add the valueline path.
-  svg.append("path")
-      .data([data])
-      .attr("class", "line")
-      .attr("d", valueline)
-      .attr("id", "line2");
+  //   // Add the valueline path.
+  // svg.append("path")
+  //     .data([data])
+  //     .attr("class", "line")
+  //     .attr("d", valueline)
+  //     .attr("id", "line2");
 
 
 
@@ -163,75 +270,75 @@ var div = d3.select("body").append("div")
     .style("opacity", 0);
 
 
-// Add the introduced scatterplot
-  svg.selectAll("dot")
-      .data(data)
-      .enter().append("circle")
-      .attr("r", function(d) {return d.radius;})
-      .attr("cx", function(d) { return x(d.introduced_date); })
-      .attr("cy", function(d) { return y(d.billStatus); })
-      //change color of dot
-      .style("fill", function(d) {
-        if(d.sponsor_party == "D") {return "darkblue";}
-        else {return "darkred";}
-       })
-      //hover function
-      .on("mouseover", function(d) {
-       div.transition()
-         .duration(200)
-         .style("opacity", .9);
-        //content of tooltip
-       div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Introduced Date: " + formatTime(d.introduced_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-         .style("left", (d3.event.pageX + 28) + "px")
-         .style("top", (d3.event.pageY - 28) + "px");
-         //hover to select
-         // Determine if current line is visible
-          var active   = line1.active ? false : true,
-            newOpacity = active ? 0 : 1;
-          // Hide or show the elements
-          d3.select("#line1").style("opacity", newOpacity);
-          // Update whether or not the elements are active
-          line1.active = active;
-       });
-      // //click function
-      // .on("click", function(){
-      // // Determine if current line is visible
-      // var active   = line1.active ? false : true,
-      //   newOpacity = active ? 0 : 1;
-      // // Hide or show the elements
-      // d3.select("#line1").style("opacity", newOpacity);
-      // // Update whether or not the elements are active
-      // line1.active = active; });
+// // Add the introduced scatterplot
+//   svg.selectAll("dot")
+//       .data(data)
+//       .enter().append("circle")
+//       .attr("r", function(d) {return d.radius;})
+//       .attr("cx", function(d) { return x(d.introduced_date); })
+//       .attr("cy", function(d) { return y(d.billStatus); })
+//       //change color of dot
+//       .style("fill", function(d) {
+//         if(d.sponsor_party == "D") {return "darkblue";}
+//         else {return "darkred";}
+//        })
+//       //hover function
+//       .on("mouseover", function(d) {
+//        div.transition()
+//          .duration(200)
+//          .style("opacity", .9);
+//         //content of tooltip
+//        div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Introduced Date: " + formatTime(d.introduced_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
+//          .style("left", (d3.event.pageX + 28) + "px")
+//          .style("top", (d3.event.pageY - 28) + "px");
+//          // //hover to select
+//          // // Determine if current line is visible
+//          //  var active   = line1.active ? false : true,
+//          //    newOpacity = active ? 0 : 1;
+//          //  // Hide or show the elements
+//          //  d3.select("#line1").style("opacity", newOpacity);
+//          //  // Update whether or not the elements are active
+//          //  line1.active = active;
+//        });
+//       // //click function
+//       // .on("click", function(){
+//       // // Determine if current line is visible
+//       // var active   = line1.active ? false : true,
+//       //   newOpacity = active ? 0 : 1;
+//       // // Hide or show the elements
+//       // d3.select("#line1").style("opacity", newOpacity);
+//       // // Update whether or not the elements are active
+//       // line1.active = active; });
 
-// Add the latest major action scatterplot
-  svg.selectAll("dot")
-      .data(data)
-      .enter().append("circle")
-      .attr("r", function(d) {return d.radius;})
-      .attr("cx", function(d) { return x(d.latest_major_action_date); })
-      .attr("cy", function(d) { return y(d.billStatus); })
-      //change color of dot
-      .style("fill", function(d) {
-        if(d.sponsor_party == "D") {return "darkblue";}
-        else {return "darkred";}
-       })
-      .on("mouseover", function(d) {
-       div.transition()
-         .duration(200)
-         .style("opacity", .9);
-        //content of tooltip
-       div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Latest Major Action Date: " + formatTime(d.latest_major_action_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-         .style("left", (d3.event.pageX) + "px")
-         .style("top", (d3.event.pageY - 28) + "px");
-         //hover to select
-         // Determine if current line is visible
-          var active   = line1.active ? false : true,
-            newOpacity = active ? 0 : 1;
-          // Hide or show the elements
-          d3.select("#line1").style("opacity", newOpacity);
-          // Update whether or not the elements are active
-          line1.active = active;
-       });
+// // Add the latest major action scatterplot
+//   svg.selectAll("dot")
+//       .data(data)
+//       .enter().append("circle")
+//       .attr("r", function(d) {return d.radius;})
+//       .attr("cx", function(d) { return x(d.latest_major_action_date); })
+//       .attr("cy", function(d) { return y(d.billStatus); })
+//       //change color of dot
+//       .style("fill", function(d) {
+//         if(d.sponsor_party == "D") {return "darkblue";}
+//         else {return "darkred";}
+//        })
+//       .on("mouseover", function(d) {
+//        div.transition()
+//          .duration(200)
+//          .style("opacity", .9);
+//         //content of tooltip
+//        div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Latest Major Action Date: " + formatTime(d.latest_major_action_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
+//          .style("left", (d3.event.pageX) + "px")
+//          .style("top", (d3.event.pageY - 28) + "px");
+//          // //hover to select
+//          // // Determine if current line is visible
+//          //  var active   = line1.active ? false : true,
+//          //    newOpacity = active ? 0 : 1;
+//          //  // Hide or show the elements
+//          //  d3.select("#line1").style("opacity", newOpacity);
+//          //  // Update whether or not the elements are active
+//          //  line1.active = active;
+//        });
 
   // Add the X Axis
   svg.append("g")
@@ -246,7 +353,8 @@ var div = d3.select("body").append("div")
         .attr("dx", "-.8em")
         .attr("dy", ".15em")
         .attr("transform", "rotate(-65)")
-        .style("fill","white");
+        // .style("fill","white")
+        ;
 
 // text label for the x axis
   svg.append("text")
@@ -262,7 +370,8 @@ var div = d3.select("body").append("div")
   .call(d3.axisLeft(y))
   //tick labels
   .selectAll("text")
-    .style("fill","white");
+    // .style("fill","white")
+    ;
 
 // text label for the y axis
 svg.append("text")
