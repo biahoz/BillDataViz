@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" charset="utf-8"></script>
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <style>
   body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0;
@@ -8,8 +10,9 @@
 
 .line {
       fill: none;
-      stroke: black;
+      stroke: lightgrey;
       stroke-width: 2px;
+      /*z-index: 0;*/
 }
 
 .axis line, .axis path{
@@ -58,132 +61,10 @@ div.tooltip {
     var formatTime = d3.timeFormat("%b %d %Y");
 
 
-    //function to determine status
+    //function to determine date
       //1 always exists
       //check if 2 exists, if yes then return
       //if it doesn't exist, then return the last existing points
-    function getEndStatus(introduced_date, house_passage, senate_passage, enacted, vetoed) {
-      var d1 = new Date();
-      var d2 = new Date();
-
-      //create date array to store dates
-      var statusArray = [0,0,0,0];
-      //create var to store last date
-      var lastStatus;
-
-      //store introduced date
-      statusArray[0] = 'Introduced';
-      lastStatus = 'Introduced';
-
-      //check cases for if house or senate is first
-      if (house_passage == null && senate_passage == null) {
-        //set both to lastDate
-        statusArray[1] = lastStatus;
-        statusArray[2] = lastStatus;
-      }
-      else if (house_passage != null && senate_passage == null) {
-          //if present, store in array
-          statusArray[1] = 'Passed House';
-          //update last date
-          lastStatus = 'Passed House';
-          statusArray[2] = lastStatus;
-      } else if (house_passage == null && senate_passage != null) {
-          //if present, store in array
-          statusArray[1] = 'Passed Senate';
-          //update last date
-          lastStatus = 'Passed Senate';
-          statusArray[2] = lastStatus;
-      } else if (house_passage != null && senate_passage != null) {
-          if (house_passage < senate_passage) {
-              statusArray[1] = 'Passed House';
-              statusArray[2] = 'Passed Senate';
-              lastStatus = 'Passed Senate';
-          } else {
-              statusArray[1] = 'Passed Senate';
-              statusArray[2] = 'Passed House';
-              lastStatus = 'Passed House';
-          }
-      }
-
-      if (enacted != null) {
-        statusArray[3] = 'Enacted';
-        lastStatus = 'Enacted';
-      } else {
-        statusArray[3] = lastStatus;
-      }
-
-      if (vetoed != null) {
-        statusArray[3] = 'Vetoed';
-        lastStatus = 'Vetoed';
-      }
-      else {
-        statusArray[3] = lastStatus;
-      }
-
-      return statusArray[3];
-    }
-
-    function getEndDate(introduced_date, house_passage, senate_passage, enacted, vetoed) {
-      var d1 = new Date();
-      var d2 = new Date();
-
-      //create date array to store dates
-      var dateArray = [0,0,0,0];
-      //create var to store last date
-      var lastDate;
-
-      //store introduced date
-      dateArray[0] = introduced_date;
-      lastDate = introduced_date;
-
-      //check cases for if house or senate is first
-      if (house_passage == null && senate_passage == null) {
-        //set both to lastDate
-        dateArray[1] = lastDate;
-        dateArray[2] = lastDate;
-      }
-      else if (house_passage != null && senate_passage == null) {
-          //if present, store in array
-          dateArray[1] = house_passage;
-          //update last date
-          lastDate = house_passage;
-          dateArray[2] = lastDate;
-      } else if (house_passage == null && senate_passage != null) {
-          //if present, store in array
-          dateArray[1] = senate_passage;
-          //update last date
-          lastDate = senate_passage;
-          dateArray[2] = lastDate;
-      } else if (house_passage != null && senate_passage != null) {
-          if (house_passage < senate_passage) {
-              dateArray[1] = house_passage;
-              dateArray[2] = senate_passage;
-              lastDate = senate_passage;
-          } else {
-              dateArray[1] = senate_passage;
-              dateArray[2] = house_passage;
-              lastDate = house_passage;
-          }
-      }
-
-      if (enacted != null) {
-        dateArray[3] = enacted;
-        lastDate = enacted;
-      } else {
-        dateArray[3] = lastDate;
-      }
-
-      if (vetoed != null) {
-        dateArray[3] = vetoed;
-        lastDate = vetoed;
-      }
-      else {
-        dateArray[3] = lastDate;
-      }
-
-      return dateArray[3];
-    }
-
     function getDate(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
 
       //create date array to store dates
@@ -338,7 +219,7 @@ d3.json("allData.json", function(error, data) {
     if (error) throw error;
 
     var lineArray = [];
-    var lineCount;
+    var lineCount = 0;
 
     //loop through bills
     //define every time, and
@@ -368,7 +249,7 @@ d3.json("allData.json", function(error, data) {
 
       //user defined data points
       //calculate status
-      d["billStatus"] = getEndStatus(d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      d["billStatus"] = getStatus(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
       //calculate radius
       d["radius"] = +getSizeByCosponsor(d.cosponsors);
 
@@ -426,22 +307,24 @@ d3.json("allData.json", function(error, data) {
       .y(function(d) { return y(d.billStatus); });
 
 
-      lineCount++;
+        var lineName = "line" + lineCount.toString();
+        var idLineName = "#" + lineName;
 
         // Add the valueline path.
         svg.append("path")
             .datum(showDates) //pass an array of the dates
             .attr("class", "line")
             .attr("d", valueline)
-            .attr("id", "line1");
+            .attr("id", lineName);
 
             lineArray.push(valueline);
+
 
         // Add the introduced scatterplot
      svg.selectAll("dot")
      // //filter to show only the first and last points
-      // .data(showDates.filter(function(d, i){ return (d && i == 3) || (d && i == 0); }))
-      .data(showDates)
+      .data(showDates.filter(function(d, i){ return (d && i == 3) || (d && i == 0); }))
+      // .data(showDates)
       .enter().append("circle")
       .attr("r", 5)
       .attr("cx", function(d) { return x(d.date); })
@@ -457,20 +340,49 @@ d3.json("allData.json", function(error, data) {
          .duration(200)
          .style("opacity", .9);
         //content of tooltip
-       // div.html(d.bill_id + "<br/>" + d.billStatus + "<br/>" + "Introduced Date: " + formatTime(d.introduced_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
        div.html(d.number + "<br/>" + formatTime(d.date) + "<br/>" + d.billStatus + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
          .style("left", (d3.event.pageX + 28) + "px")
          .style("top", (d3.event.pageY - 28) + "px");
          // //hover to select
          // // Determine if current line is visible
-         //  var active   = line1.active ? false : true,
+         //  var active   = lineArray[lineCount].active ? false : true,
          //    newOpacity = active ? 0 : 1;
          //  // Hide or show the elements
-         //  d3.select("#line1").style("opacity", newOpacity);
+         //  d3.select(idLineName).style("opacity", newOpacity);
          //  // Update whether or not the elements are active
-         //  line1.active = active;
+         //  lineArray[lineCount].active = active;
+         // if(d3.select(idLineName).style("opacity") != 0){
+         //    div.transition()
+         //        .duration(200)
+         //        .style("opacity", .8);
+         //    }
        });
+
+        lineCount++; //increment count
     }); //end loop
+
+
+//line mouseover
+svg.selectAll(".line")
+    .on("mouseover", function(d) {
+      d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
+      .style("stroke-width",'6px')
+      .style("stroke", '#3a3a3a')
+      .style("z-index", 1000);
+      var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
+        d3.selectAll(selectthegraphs)
+        .style("opacity",0)
+        .style("z-index", -1);
+    })
+    .on("mouseout", function(d) {
+      d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
+      .style("stroke-width",'2px')
+      .style("stroke", 'lightgrey');
+      var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
+        d3.selectAll(selectthegraphs)
+        .style("opacity",1);
+    });
+
 
 
 var div = d3.select("body").append("div")
