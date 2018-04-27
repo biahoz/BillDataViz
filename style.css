@@ -47,7 +47,7 @@ body {
 
 .outerwrapper .info-box {
 	position: relative;
-	top: 0px;
+	top: 400px;
 	width: 630px;
 	height: 320px;
 	opacity: 1;
@@ -183,3 +183,16 @@ body {
 .outerwrapper svg .selected {
 	fill: #E85338;
 }
+  div.tooltip {
+	position: absolute;
+	text-align: center;
+	width: 100px;
+	height: 100px;
+	padding: 2px;
+	font: 12px sans-serif;
+	/*color: white;*/
+	background: lightsteelblue;
+	border: 0px;
+	/*border-radius: 8px*/
+	;
+  }
