@@ -1,12 +1,64 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-
+  <!-- jQuery -->
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" charset="utf-8"></script>
+  <!-- D3 -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
   <style>
-  body { margin:0;position:fixed;top:0;right:0;bottom:0;left:0;
-      background-color: white;}
+  body { margin:10px;top:0;right:0;bottom:0;left:0;
+      background-color: white; overflow: auto;}
+
+#container {
+  margin: 50px;
+}
+
+#subtitle {
+  width: 50%;
+}
+
+#arrow {
+    padding-top: 25%;
+    margin: auto;
+    width: 50%;
+    text-align: center
+}
+
+#graph-container {
+    margin: auto;
+    width: 1200px; /*width of svg*/
+}
+
+a {
+    color: black;
+}
+
+#a-scroll {
+  color: black;
+  text-decoration: none;
+}
+
+h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 45px;
+}
+
+h2 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+}
 
 .line {
       fill: none;
@@ -20,7 +72,8 @@
 }
 
 .axislabel {
-    font: 16px sans-serif;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
     /*fill: white;*/
     stroke: none;
 }
@@ -30,8 +83,9 @@ div.tooltip {
   text-align: center;
   width: 100px;
   height: 100px;
-  padding: 2px;
-  font: 12px sans-serif;
+  padding: 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
   /*color: white;*/
   background: lightsteelblue;
   border: 0px;
@@ -45,11 +99,71 @@ div.tooltip {
 
 <body>
 
+<div id="container">
+    <h1>How mass shootings affect gun control policy</h1>
+
+    <div id="subtitle">
+      <h2>Is there a correllation between mass shootings and the number of gun control bills that are issued by Congress?</h2>
+    </div>
+
+    <div id="arrow">
+      <a href = "#graph" id="a-scroll"><p>Scroll to explore</p>
+      <i class="fas fa-chevron-down fa-5x"></i></a>
+    </div>
+
+</div>
+
+<section id="graph">
+  <div id ="graph-container">
+    <svg></svg>
+  </div>
+</section>
+
+<section id="bottom">
+  <div id="container">
+    LEGEND HERE
+    <h2>How are incidents of gun violence, protest numbers, and bills passed in Congress related?</h2>
+    <br>
+    <p>Data sources: <a href="https://projects.propublica.org/api-docs/congress-api/bills/" target="_blank">ProPublica API</a> and Gun Violence Data
+    <br> <br>
+    Created by: <a href="https://emilywdeng.com" target="_blank">Emily Deng</a>, <a href="https://projects.propublica.org/api-docs/congress-api/bills/" target="_blank">Zohaib Khan</a>, <a href="https://xzhang395.github.io/portfolio/" target="_blank">Xueting "Nika" Zhang</a>
+    <br> <br>
+    &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+  </div>
+</section>
+
+
   <script>
+
+  // Smooth Scroll
+  $(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+});
 
     // set the dimensions and margins of the graph
     var margin = {top: 50, right: 50, bottom: 150, left: 125},
-    width = 1300 - margin.left - margin.right,
+    width = 1200 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
     // parse the date / time
@@ -65,7 +179,7 @@ div.tooltip {
       //1 always exists
       //check if 2 exists, if yes then return
       //if it doesn't exist, then return the last existing points
-    function getDate(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
+    function getBillDate(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
 
       //create date array to store dates
       var dateArray = [0,0,0,0];
@@ -208,7 +322,8 @@ var y = d3.scalePoint().range([height, 0]);
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg = d3.select("body").append("svg")
+// var svg = d3.select("body").append("svg")
+var svg = d3.select("svg")
 .attr("width", width + margin.left + margin.right)
 .attr("height", height + margin.top + margin.bottom)
 .append("g")
@@ -265,10 +380,10 @@ d3.json("allData.json", function(error, data) {
       point2.billStatus = getStatus(2, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
       point3.billStatus = getStatus(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
 
-      point0.date = getDate(0, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point1.date = getDate(1, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point2.date = getDate(2, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point3.date = getDate(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point0.date = getBillDate(0, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point1.date = getBillDate(1, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point2.date = getBillDate(2, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
+      point3.date = getBillDate(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
 
       point0.number = d.number;
       point1.number = d.number;
