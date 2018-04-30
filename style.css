@@ -2,11 +2,18 @@ body {
     color: #000000;
     font-family: Verdana,arial,Helvetica,sans-serif;
     font-size: 90%;
+    margin:10px;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    background-color: white;
+    overflow: auto;
 }
 
 .outerwrapper {
 	/*display: none;*/
-	width: 630px;	
+	width: 630px;
 	position: relative;
 }
 
@@ -60,7 +67,7 @@ body {
 
 .outerwrapper div[class^='event'] {
 	position: relative;
-	float: left;	
+	float: left;
 	width: 630px;
 	padding: 10px 0;
 
@@ -100,12 +107,10 @@ body {
 	content:none;
 }
 
-
-
 .outerwrapper .tooltip
 {
 	display:none;
-	position: absolute; 
+	position: absolute;
 	top: 110px;
 	width: 135px;
 	z-index: 999;
@@ -114,11 +119,11 @@ body {
 	background-color: #5E5E5E;
 	text-align:center;
 	opacity: 0;
-	-webkit-transition: opacity 0.3s ease;                  
-	-moz-transition: opacity 0.3s ease;                 
-	-o-transition: opacity 0.3s ease;   
-	-ms-transition: opacity 0.3s ease;          
-	transition: opacity 0.3s ease;               
+	-webkit-transition: opacity 0.3s ease;
+	-moz-transition: opacity 0.3s ease;
+	-o-transition: opacity 0.3s ease;
+	-ms-transition: opacity 0.3s ease;
+	transition: opacity 0.3s ease;
 }
 
 .outerwrapper .tooltip:after
@@ -170,16 +175,15 @@ body {
 	fill: none;
 	stroke: lightgrey;
 	stroke-width: 2px;
-	/*z-index: 0;*/
   }
 
 .outerwrapper svg .locations {
 	fill: #ffd4d4;
 	cursor: pointer;
-	-webkit-transition: all 0.2s ease;                  
-	-moz-transition: all 0.2s ease;                 
-	-o-transition: all 0.2s ease;   
-	-ms-transition: all 0.2s ease;          
+	-webkit-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	-o-transition: all 0.2s ease;
+	-ms-transition: all 0.2s ease;
 	transition: all 0.2s ease;
 }
 
@@ -190,16 +194,72 @@ body {
 .outerwrapper svg .selected {
 	fill: #E85338;
 }
-  div.tooltip {
-	position: absolute;
-	text-align: center;
-	width: 100px;
-	height: 100px;
-	padding: 2px;
-	font: 12px sans-serif;
-	/*color: white;*/
-	background: lightsteelblue;
-	border: 0px;
-	/*border-radius: 8px*/
-	;
-  }
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 100px;
+  height: 100px;
+  padding: 5px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  background: lightsteelblue;
+  border: 0px;
+  /*border-radius: 8px*/
+  ;
+}
+
+/*.axislabel {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    stroke: none;}*/
+
+
+/* PAGE STYLE */
+
+
+#container {
+  margin: 50px;
+}
+
+#subtitle {
+  width: 50%;
+}
+
+#arrow {
+    padding-top: 25%;
+    margin: auto;
+    width: 50%;
+    text-align: center
+}
+
+#graph-container {
+    margin: auto;
+    width: 1200px; /*width of svg*/
+}
+
+a {
+    color: black;
+}
+
+#a-scroll {
+  color: black;
+  text-decoration: none;
+}
+
+h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 45px;
+}
+
+h2 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+}

@@ -1,15 +1,34 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <title>Simple Template</title>
+    <title>Gun Control</title>
     <link rel="stylesheet" href="style.css">
 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 </head>
 
 <body>
 
+    <div id="container">
+      <h1>How mass shootings affect gun control policy</h1>
+
+      <div id="subtitle">
+        <h2>Is there a correllation between mass shootings and the number of gun control bills that are issued by Congress?</h2>
+      </div>
+
+      <div id="arrow">
+        <a href = "#graph" id="a-scroll"><p>Scroll to explore</p>
+        <i class="fas fa-chevron-down fa-5x"></i></a>
+      </div>
+
+  </div>
+
+  <section id="graph">
     <div class="outerwrapper">
 
         <div class="timeline">
@@ -31,11 +50,36 @@
 
     </div>
     <!-- outerwrapper -->
+    </section>
+
+<!--
+  <div id ="graph-container">
+    <svg></svg>
+  </div>
+ -->
+
+
+
+<section id="bottom">
+  <div id="container">
+    LEGEND HERE
+    <h2>How are incidents of gun violence, protest numbers, and bills passed in Congress related?</h2>
+    <br>
+    <p>Data sources: <a href="https://projects.propublica.org/api-docs/congress-api/bills/" target="_blank">ProPublica API</a> and Gun Violence Data
+    <br> <br>
+    Created by: <a href="https://emilywdeng.com" target="_blank">Emily Deng</a>, <a href="zohaibkhan.me" target="_blank">Zohaib Khan</a>, <a href="https://xzhang395.github.io/portfolio/" target="_blank">Xueting "Nika" Zhang</a>
+    <br> <br>
+    &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+  </div>
+</section>
+
+<!-- JS Scripts-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="script.js"></script>
-
+    <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
 
 </body>
 

@@ -1,3 +1,29 @@
+  // Smooth Scroll
+  $(document).ready(function(){
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+});
+
 /*	An array to store all the data */
 var items = [];
 
@@ -11,7 +37,7 @@ function runall(data, data2) {
     /* Helper function to format and parse date from data */
     function getDate(d) {
         /*	If d is a number or a string in the format Day Month Year
-process it as normal. Other wise presume that it may be a string 
+process it as normal. Other wise presume that it may be a string
 in the format Month Year and add 1 to the start so that Firefox
 and safari can parse the date */
         if (typeof d === "number") {
@@ -155,7 +181,7 @@ i.e date, headline, the text, image link and credit */
     timeDiff = timeDiff + (timeDiff * 0.1);
 
 
-    /*	Extend the time range before the first date and after the last date 
+    /*	Extend the time range before the first date and after the last date
 to make for a more attractive timeline */
     var timeBegin = getDate(items[counter].date1.getTime() - timeDiff);
     var timeEnd = getDate(items[counter].date1.getTime() + timeDiff);
@@ -731,7 +757,7 @@ if so half the height of the block to accomadate */
         y.domain(['Vetoed', 'Introduced', 'Passed House', 'Passed Senate', 'Enacted']);
 
         // define the line
-        //   console.log(d.date);  
+        //   console.log(d.date);
         // console.log(showDates);
         var lineName = "line" + lineCount.toString();
         var idLineName = "#" + lineName;

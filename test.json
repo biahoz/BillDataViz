@@ -1,10 +1,11 @@
+<<<<<<< HEAD
 {
    "status":"OK",
    "copyright":"Copyright (c) 2018 Pro Publica Inc. All Rights Reserved.",
    "results":[
       {
-         
-         
+
+
          "num_results": 20,
          "offset": 0,
          "bills": [
@@ -28,10 +29,10 @@
                  "introduced_date": "2018-03-05",
                  "active": false,
                  "last_vote": null,
-                 "house_passage": null,
-                 "senate_passage": null,
-                 "enacted": null,
-                 "vetoed": null,
+                 "house_passage": "2018-04-05",
+                 "senate_passage": "2018-05-05",
+                 "enacted": "2018-06-05",
+                 "vetoed": "null",
                  "cosponsors": 13,
                  "cosponsors_by_party": {"D":13},
                  "committees": "House Agriculture Committee",
@@ -708,7 +709,11 @@
                  "latest_major_action_date": "2018-02-27",
                  "latest_major_action": "Referred to the House Committee on Education and the Workforce."
               }
+<<<<<<< HEAD
              ]
       }
    ]
 }
+=======
+             ]
+>>>>>>> master
