@@ -1,123 +1,64 @@
 <!DOCTYPE html>
+
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <!-- jQuery -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!-- D3 -->
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+    <meta charset="utf-8">
+    <title>Gun Control</title>
+    <link rel="stylesheet" href="style.css">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
-
-  <style>
-  body { margin:10px;top:0;right:0;bottom:0;left:0;
-      background-color: white; overflow: auto;}
-
-#container {
-  margin: 50px;
-}
-
-#subtitle {
-  width: 50%;
-}
-
-#arrow {
-    padding-top: 25%;
-    margin: auto;
-    width: 50%;
-    text-align: center
-}
-
-#graph-container {
-    margin: auto;
-    width: 1200px; /*width of svg*/
-}
-
-a {
-    color: black;
-}
-
-#a-scroll {
-  color: black;
-  text-decoration: none;
-}
-
-h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 45px;
-}
-
-h2 {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 18px;
-    font-weight: 300;
-}
-
-p {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-}
-
-.line {
-      fill: none;
-      stroke: lightgrey;
-      stroke-width: 2px;
-      /*z-index: 0;*/
-}
-
-.axis line, .axis path{
-    /*stroke: white;*/
-}
-
-.axislabel {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 16px;
-    /*fill: white;*/
-    stroke: none;
-}
-
-div.tooltip {
-  position: absolute;
-  text-align: center;
-  width: 100px;
-  height: 100px;
-  padding: 5px;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 12px;
-  /*color: white;*/
-  background: lightsteelblue;
-  border: 0px;
-  /*border-radius: 8px*/
-  ;
-}
-
-
-  </style>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 </head>
 
 <body>
 
-<div id="container">
-    <h1>How mass shootings affect gun control policy</h1>
+    <div id="container">
+      <h1>How mass shootings affect gun control policy</h1>
 
-    <div id="subtitle">
-      <h2>Is there a correllation between mass shootings and the number of gun control bills that are issued by Congress?</h2>
+      <div id="subtitle">
+        <h2>Is there a correllation between mass shootings and the number of gun control bills that are issued by Congress?</h2>
+      </div>
+
+      <div id="arrow">
+        <a href = "#graph" id="a-scroll"><p>Scroll to explore</p>
+        <i class="fas fa-chevron-down fa-5x"></i></a>
+      </div>
+
+  </div>
+
+  <section id="graph">
+    <div class="outerwrapper">
+
+        <div class="timeline">
+            <div class="timeline-header">
+                <h2>
+                    <span class="timeline-heading"></span>
+                </h2>
+                <p class="timeline-standfirst"></p>
+            </div>
+            <div class="tooltip">
+                <p></p>
+            </div>
+        </div>
+        <!-- timeline -->
+
+        <div class="info-box">
+            <div class="panel"></div>
+        </div>
+
     </div>
+    <!-- outerwrapper -->
+    </section>
 
-    <div id="arrow">
-      <a href = "#graph" id="a-scroll"><p>Scroll to explore</p>
-      <i class="fas fa-chevron-down fa-5x"></i></a>
-    </div>
-
-</div>
-
-<section id="graph">
+<!--
   <div id ="graph-container">
     <svg></svg>
   </div>
-</section>
+ -->
+
+
 
 <section id="bottom">
   <div id="container">
@@ -132,421 +73,14 @@ div.tooltip {
   </div>
 </section>
 
-
-  <script>
-
-  // Smooth Scroll
-  $(document).ready(function(){
-  // Add smooth scrolling to all links
-  $("a").on('click', function(event) {
-
-    // Make sure this.hash has a value before overriding default behavior
-    if (this.hash !== "") {
-      // Prevent default anchor click behavior
-      event.preventDefault();
-
-      // Store hash
-      var hash = this.hash;
-
-      // Using jQuery's animate() method to add smooth page scroll
-      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
-      }, 800, function(){
-
-        // Add hash (#) to URL when done scrolling (default click behavior)
-        window.location.hash = hash;
-      });
-    } // End if
-  });
-});
-
-    // set the dimensions and margins of the graph
-    var margin = {top: 50, right: 50, bottom: 150, left: 125},
-    width = 1200 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
-    // parse the date / time
-    var parseTime = d3.timeParse("%Y-%m-%d");
-
-    var parseTime = d3.timeParse("%Y-%m-%d");
-
-    //format date data
-    var formatTime = d3.timeFormat("%b %d %Y");
-
-
-    //function to determine date
-      //1 always exists
-      //check if 2 exists, if yes then return
-      //if it doesn't exist, then return the last existing points
-    function getBillDate(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
-
-      //create date array to store dates
-      var dateArray = [0,0,0,0];
-      //create var to store last date
-      var lastDate;
-
-      //store introduced date
-      dateArray[0] = introduced_date;
-      lastDate = introduced_date;
-
-      //check cases for if house or senate is first
-      if (house_passage == null && senate_passage == null) {
-        //set both to lastDate
-        dateArray[1] = lastDate;
-        dateArray[2] = lastDate;
-      }
-      else if (house_passage != null && senate_passage == null) {
-          //if present, store in array
-          dateArray[1] = house_passage;
-          //update last date
-          lastDate = house_passage;
-          dateArray[2] = lastDate;
-      } else if (house_passage == null && senate_passage != null) {
-          //if present, store in array
-          dateArray[1] = senate_passage;
-          //update last date
-          lastDate = senate_passage;
-          dateArray[2] = lastDate;
-      } else if (house_passage != null && senate_passage != null) {
-          if (house_passage < senate_passage) {
-              dateArray[1] = house_passage;
-              dateArray[2] = senate_passage;
-              lastDate = senate_passage;
-          } else {
-              dateArray[1] = senate_passage;
-              dateArray[2] = house_passage;
-              lastDate = house_passage;
-          }
-      }
-
-      if (enacted != null) {
-        dateArray[3] = enacted;
-        lastDate = enacted;
-      } else {
-        dateArray[3] = lastDate;
-      }
-
-      if (vetoed != null) {
-        dateArray[3] = vetoed;
-        lastDate = vetoed;
-      }
-      else {
-        dateArray[3] = lastDate;
-      }
-
-      return dateArray[point];
-    }
-
-    // ['Vetoed','Introduced', 'Passed House','Passed Senate','Enacted']
-    function getStatus(point, introduced_date, house_passage, senate_passage, enacted, vetoed) {
-      var d1 = new Date();
-      var d2 = new Date();
-
-      //create date array to store dates
-      var statusArray = [0,0,0,0];
-      //create var to store last date
-      var lastStatus;
-
-      //store introduced date
-      statusArray[0] = 'Introduced';
-      lastStatus = 'Introduced';
-
-      //check cases for if house or senate is first
-      if (house_passage == null && senate_passage == null) {
-        //set both to lastDate
-        statusArray[1] = lastStatus;
-        statusArray[2] = lastStatus;
-      }
-      else if (house_passage != null && senate_passage == null) {
-          //if present, store in array
-          statusArray[1] = 'Passed House';
-          //update last date
-          lastStatus = 'Passed House';
-          statusArray[2] = lastStatus;
-      } else if (house_passage == null && senate_passage != null) {
-          //if present, store in array
-          statusArray[1] = 'Passed Senate';
-          //update last date
-          lastStatus = 'Passed Senate';
-          statusArray[2] = lastStatus;
-      } else if (house_passage != null && senate_passage != null) {
-          if (house_passage < senate_passage) {
-              statusArray[1] = 'Passed House';
-              statusArray[2] = 'Passed Senate';
-              lastStatus = 'Passed Senate';
-          } else {
-              statusArray[1] = 'Passed Senate';
-              statusArray[2] = 'Passed House';
-              lastStatus = 'Passed House';
-          }
-      }
-
-      if (enacted != null) {
-        statusArray[3] = 'Enacted';
-        lastStatus = 'Enacted';
-      } else {
-        statusArray[3] = lastStatus;
-      }
-
-      if (vetoed != null) {
-        statusArray[3] = 'Vetoed';
-        lastStatus = 'Vetoed';
-      }
-      else {
-        statusArray[3] = lastStatus;
-      }
-
-      return statusArray[point];
-    }
-
-
-
-function getSizeByCosponsor(cosponsors) {
-      var maxValue, maxCircleRadius;
-
-
-      var scale = d3.scaleSqrt()
-      .domain([0, 300])
-      .range([2, 10]);
-
-       return scale(cosponsors);
-    }
-
-// set the ranges
-var x = d3.scaleTime().range([0, width]);
-var y = d3.scalePoint().range([height, 0]);
-
-
-
-// append the svg obgect to the body of the page
-// appends a 'group' element to 'svg'
-// moves the 'group' element to the top left margin
-// var svg = d3.select("body").append("svg")
-var svg = d3.select("svg")
-.attr("width", width + margin.left + margin.right)
-.attr("height", height + margin.top + margin.bottom)
-.append("g")
-.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// Get the data
-d3.json("allData.json", function(error, data) {
-    if (error) throw error;
-
-    var lineArray = [];
-    var lineCount = 0;
-
-    //loop through bills
-    //define every time, and
-    // grab dates we want and pass into the draw function
-    //draw every time
-    //everytime you create a line you put into array
-    //draw each line separately
-    //increment a counter
-    //add to a line array
-    data.forEach (function(d) {
-      //get relevant data points
-      //parse into appropriate data formats
-      d.bill_id = d.bill_id;
-      d.govtrack_url = d.govtrack_url;
-      d.number = d.number;
-      d.sponsor_party = d.sponsor_party;
-      d.active = d.active;
-
-      d.introduced_date = parseTime(d.introduced_date); //for dates
-      d.latest_major_action_date = parseTime(d.latest_major_action_date);
-      d.house_passage = parseTime(d.house_passage);
-      d.senate_passage = parseTime(d.senate_passage);
-      d.enacted = parseTime(d.enacted);
-      d.vetoed = parseTime(d.vetoed);
-
-      d.cosponsors = +d.cosponsors; //for numbers
-
-      //user defined data points
-      //calculate status
-      d["billStatus"] = getStatus(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      //calculate radius
-      d["radius"] = +getSizeByCosponsor(d.cosponsors);
-
-      //create objects of points to show
-      var point0 = new Object();
-      var point1 = new Object();
-      var point2 = new Object();
-      var point3 = new Object();
-
-      //add properties to points
-      point0.billStatus = getStatus(0, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point1.billStatus = getStatus(1, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point2.billStatus = getStatus(2, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point3.billStatus = getStatus(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-
-      point0.date = getBillDate(0, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point1.date = getBillDate(1, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point2.date = getBillDate(2, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-      point3.date = getBillDate(3, d.introduced_date, d.house_passage, d.senate_passage, d.enacted, d.vetoed);
-
-      point0.number = d.number;
-      point1.number = d.number;
-      point2.number = d.number;
-      point3.number = d.number;
-
-      point0.sponsor_party = d.sponsor_party;
-      point1.sponsor_party = d.sponsor_party;
-      point2.sponsor_party = d.sponsor_party;
-      point3.sponsor_party = d.sponsor_party;
-
-      point0.govtrack_url = d.govtrack_url;
-      point1.govtrack_url = d.govtrack_url;
-      point2.govtrack_url = d.govtrack_url;
-      point3.govtrack_url = d.govtrack_url;
-
-      //add points to array
-      var showDates = [];
-      showDates.push(point0);
-      showDates.push(point1);
-      showDates.push(point2);
-      showDates.push(point3);
-
-
-      // Scale the range of the data
-        x.domain(d3.extent(data, function(d) {
-          return d.introduced_date;
-           // return d.date;
-        }));
-        y.domain(['Vetoed','Introduced', 'Passed House','Passed Senate','Enacted']);
-
-      // define the line
-      var valueline = d3.line()
-      .curve(d3.curveCatmullRom) //curve
-      .x(function(d) { return x(d.date); })
-      .y(function(d) { return y(d.billStatus); });
-
-
-        var lineName = "line" + lineCount.toString();
-        var idLineName = "#" + lineName;
-
-        // Add the valueline path.
-        svg.append("path")
-            .datum(showDates) //pass an array of the dates
-            .attr("class", "line")
-            .attr("d", valueline)
-            .attr("id", lineName);
-
-            lineArray.push(valueline);
-
-
-        // Add the introduced scatterplot
-     svg.selectAll("dot")
-     // //filter to show only the first and last points
-      .data(showDates.filter(function(d, i){ return (d && i == 3) || (d && i == 0); }))
-      // .data(showDates)
-      .enter().append("circle")
-      .attr("r", 5)
-      .attr("cx", function(d) { return x(d.date); })
-      .attr("cy", function(d) { return y(d.billStatus); })
-      //change color of dot
-      .style("fill", function(d) {
-        if(d.sponsor_party == "D") {return "darkblue";}
-        else {return "darkred";}
-       })
-      //hover function
-      .on("mouseover", function(d) {
-       div.transition()
-         .duration(200)
-         .style("opacity", .9);
-        //content of tooltip
-       div.html(d.number + "<br/>" + formatTime(d.date) + "<br/>" + d.billStatus + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-         .style("left", (d3.event.pageX + 28) + "px")
-         .style("top", (d3.event.pageY - 28) + "px");
-         // //hover to select
-         // // Determine if current line is visible
-         //  var active   = lineArray[lineCount].active ? false : true,
-         //    newOpacity = active ? 0 : 1;
-         //  // Hide or show the elements
-         //  d3.select(idLineName).style("opacity", newOpacity);
-         //  // Update whether or not the elements are active
-         //  lineArray[lineCount].active = active;
-         // if(d3.select(idLineName).style("opacity") != 0){
-         //    div.transition()
-         //        .duration(200)
-         //        .style("opacity", .8);
-         //    }
-       });
-
-        lineCount++; //increment count
-    }); //end loop
-
-
-//line mouseover
-svg.selectAll(".line")
-    .on("mouseover", function(d) {
-      d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
-      .style("stroke-width",'6px')
-      .style("stroke", '#3a3a3a')
-      .style("z-index", 1000);
-      var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
-        d3.selectAll(selectthegraphs)
-        .style("opacity",0)
-        .style("z-index", -1);
-    })
-    .on("mouseout", function(d) {
-      d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
-      .style("stroke-width",'2px')
-      .style("stroke", 'lightgrey');
-      var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
-        d3.selectAll(selectthegraphs)
-        .style("opacity",1);
-    });
-
-
-
-var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-
-  // Add the X Axis
-  svg.append("g")
-      .attr("class", "axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x)
-              .ticks(d3.timeMonth.every(3))
-              .tickFormat(d3.timeFormat("%b %Y")))
-      //tick labels
-      .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", ".15em")
-        .attr("transform", "rotate(-65)")
-        // .style("fill","white")
-        ;
-
-// text label for the x axis
-  svg.append("text")
-      .attr("class", "axislabel")
-      .attr("x", width / 2 )
-      .attr("y",  height + margin.top + 70)
-      .style("text-anchor", "middle")
-      .text("Introduced Date");
-
-  // Add the Y Axis
-  svg.append("g")
-  .attr("class", "axis")
-  .call(d3.axisLeft(y))
-  //tick labels
-  .selectAll("text")
-    // .style("fill","white")
-    ;
-
-// text label for the y axis
-svg.append("text")
-      .attr("class", "axislabel")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x",0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Status");
-})
-</script>
+<!-- JS Scripts-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="script.js"></script>
+    <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
 
 </body>
+
+</html>
