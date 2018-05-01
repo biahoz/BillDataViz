@@ -164,7 +164,7 @@ body {
 
 .outerwrapper svg .axis line {
 	fill: none;
-	stroke: #999999;
+	stroke: none;
 	shape-rendering: crispEdges;
 }
 
@@ -205,7 +205,8 @@ div.tooltip {
   padding-left: 10px;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
-  background: lightsteelblue;
+  background-color: #5E5E5E;
+  color: #FFF;
   border: 0px;
   /*border-radius: 8px*/
   ;

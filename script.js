@@ -1,27 +1,27 @@
-  // Smooth Scroll
-  $(document).ready(function(){
-  // Add smooth scrolling to all links
-  $("a").on('click', function(event) {
+// Smooth Scroll
+$(document).ready(function () {
+    // Add smooth scrolling to all links
+    $("a").on('click', function (event) {
 
-    // Make sure this.hash has a value before overriding default behavior
-    if (this.hash !== "") {
-      // Prevent default anchor click behavior
-      event.preventDefault();
+        // Make sure this.hash has a value before overriding default behavior
+        if (this.hash !== "") {
+            // Prevent default anchor click behavior
+            event.preventDefault();
 
-      // Store hash
-      var hash = this.hash;
+            // Store hash
+            var hash = this.hash;
 
-      // Using jQuery's animate() method to add smooth page scroll
-      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
-      $('html, body').animate({
-        scrollTop: $(hash).offset().top
-      }, 800, function(){
+            // Using jQuery's animate() method to add smooth page scroll
+            // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+            $('html, body').animate({
+                scrollTop: $(hash).offset().top
+            }, 800, function () {
 
-        // Add hash (#) to URL when done scrolling (default click behavior)
-        window.location.hash = hash;
-      });
-    } // End if
-  });
+                // Add hash (#) to URL when done scrolling (default click behavior)
+                window.location.hash = hash;
+            });
+        } // End if
+    });
 });
 
 /*	An array to store all the data */
@@ -155,10 +155,6 @@ i.e date, headline, the text, image link and credit */
         .curve(d3.curveCatmullRom) //curve
         .x(function (d) { return x(d.date); })
         .y(function (d) { return y(d.billStatus); });
-
-    // var valueline = d3.line()
-    //     .x(function (d) { return x(d.latest_major_action_date); })
-    //     .y(function (d) { return y(d.cosponsors); });
 
     /*	A global variable to control which event/location to show */
     var counter = 0;
@@ -421,76 +417,26 @@ of the SVG in IE */
 
         })
         .attr("y", function (d, i) {
-            /*	Work out if the first date of the current range overlaps the last date of the previous
-if so move the current rect down so that there is no overlap*/
-            var prev = 0;
-
-            if (i > 0) {
-                prev = i - 1;
-            }
-
-            if (i === 0) {
-                return 0;
-            } else if (items[prev].date2 < items[i].date1) {
-                return 0;
-            } else {
-                return (miniHeight - 10) / 2;
-            }
+            return 0;
         })
         .attr("width", function (d) {
             if (d.date1 < d.date2) {
-                /* 	decide the width of the rect based on the range of dates */
-                return x(d.date2) - x(d.date1);
+                return 1;
             } else {
-                /* 	if no end date is specified add 86,400,000 milliseconds (1 day) to the first
-date to create a span of time for the width
-but make sure that it is at least 4 px wide */
-                var thisWidth = x(getDate(d.date1.getTime() + 86400000)) - x(d.date1);
-
-                if (thisWidth < 4) {
-                    return 4;
-                } else {
-                    return thisWidth;
-                }
+                return 1;
             }
         })
         .attr("height", function (d, i) {
-            /*	Work out if the first date of the current range overlaps the last date of the previous
-if so half the height of the block to accomadate */
-            var prev = 0;
-            var next;
-
-            if (i > 0) {
-                prev = i - 1;
-            }
-
-            if (i < items.length - 1) {
-                next = i + 1
-            } else {
-                next = items.length - 1;
-            }
-
-            if (prev > 0) {
-                if (items[i].date2 > items[next].date1) {
-                    return (miniHeight - 10) / 2;
-                } else if (items[prev].date2 > items[i].date1) {
-                    return (miniHeight - 10) / 2;
-                } else {
-                    return (miniHeight - 10);
-                }
-            } else {
-                return (miniHeight - 10);
-            }
-
+            return miniHeight;
         })
         .on("mouseover", function (d, i) {
 
             if (d.date1 < d.date2) {
                 d3.select(".outerwrapper .timeline .tooltip")
-                    .html("<p>" + d.dateStart + " - <br />" + d.dateEnd + "</p>");
+                    .html("<p>" + d.dateStart + " - <br />" + d.dateEnd + "</p><br><p>" + d.headline + "</p>");
             } else {
                 d3.select(".outerwrapper .timeline .tooltip")
-                    .html("<p>" + d.dateStart + "</p>");
+                    .html("<p>" + d.dateStart + "</p><br><p>" + d.headline + "</p>");
             }
 
             var eventLeft = parseInt(d3.select(this).attr("x"));
@@ -756,8 +702,7 @@ if so half the height of the block to accomadate */
         y.domain(['Vetoed', 'Introduced', 'Passed House', 'Passed Senate', 'Enacted']);
 
         // define the line
-        //   console.log(d.date);
-        // console.log(showDates);
+
         var lineName = "line" + lineCount.toString();
         var idLineName = "#" + lineName;
 
@@ -793,9 +738,8 @@ if so half the height of the block to accomadate */
 
         //     //hover to select
         //     // Determine if current line is visible
-             var active   = lineArray[lineCount].active ? false : true,
-               newOpacity = active ? 0 : 1;
-               console.log(lineArray[lineCount].active ? false : true);
+        var active = lineArray[lineCount].active ? false : true,
+            newOpacity = active ? 0 : 1;
         //      // Hide or show the elements
         //      d3.select(idLineName).style("opacity", newOpacity);
         //      // Update whether or not the elements are active
@@ -812,8 +756,8 @@ if so half the height of the block to accomadate */
     }); //end loop
     //   console.log(allshowdata);
     var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+        .attr("class", "tooltip")
+        .style("opacity", 0);
     for (var i = 0; i < allshowdata.length; i++) {
         // console.log(allshowdata[i]);
         var lineName = "line" + i.toString();
@@ -857,30 +801,51 @@ if so half the height of the block to accomadate */
                         .duration(200)
                         .style("opacity", .8);
                 }
-                            div.html(d.number + "<br/>" + formatTime(d.date) + "<br/>" + d.billStatus + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-              .style("left", (d3.event.pageX + 28) + "px")
-              .style("top", (d3.event.pageY - 28) + "px");
+                div.html(d.number + "<br/>" + formatTime(d.date) + "<br/>" + d.billStatus + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
+                    .style("left", (d3.event.pageX + 28) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+
+
+
+            });
+            chart.selectAll(".line")
+            .on("mouseover", function (d) {
+                d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
+                    .style("stroke-width", '6px')
+                    .style("stroke", '#3a3a3a')
+                    .style("z-index", 1000);
+                var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
+                d3.selectAll(selectthegraphs)
+                    .style("opacity", 0)
+                    .style("z-index", -1);
+            })
+            .on("mouseout", function (d) {
+                d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
+                    .style("stroke-width", '2px')
+                    .style("stroke", 'lightgrey');
+                var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
+                d3.selectAll(selectthegraphs)
+                    .style("opacity", 1);
             });
     }
-    //   chart.selectAll(".line")
-    //   .on("mouseover", function (d) {
-    //     d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
-    //       .style("stroke-width", '6px')
-    //       .style("stroke", '#3a3a3a')
-    //       .style("z-index", 1000);
-    //     var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
-    //     d3.selectAll(selectthegraphs)
-    //       .style("opacity", 0)
-    //       .style("z-index", -1);
-    //   })
-    //   .on("mouseout", function (d) {
-    //     d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
-    //       .style("stroke-width", '2px')
-    //       .style("stroke", 'lightgrey');
-    //     var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
-    //     d3.selectAll(selectthegraphs)
-    //       .style("opacity", 1);
-    //   });
+                                // Add the Y Axis
+                                chart.append("g")
+                                .attr("class", "axis")
+                                .call(d3.axisLeft(y))
+                                //tick labels
+                                .selectAll("text");
+                                // .style("fill","white");
+            
+                            // text label for the y axis
+                            chart.append("text")
+                                .attr("class", "axislabel")
+                                .attr("transform", "rotate(-90)")
+                                .attr("y", 0 - marginLeft)
+                                .attr("x", 0 - (height / 2))
+                                .attr("dy", "1em")
+                                .style("text-anchor", "middle")
+                                .text("Status");
+
     // // parse the date / time
     // var parseTime = d3.timeParse("%Y-%m-%d");
 
@@ -897,82 +862,6 @@ if so half the height of the block to accomadate */
 
     // ////////////////////
 
-    // //loop through bills
-    // data2.forEach(function (d) {
-    //     // console.log("hihihi");
-    //     // result.innerText = result.innerText + d.latest_major_action_date + "\n"+ d.cosponsors + "\n";
-    //     //get relevant data points
-    //     //parse into appropriate data formats
-    //     d.introduced_date = parseTime(d.introduced_date);
-    //     d.latest_major_action_date = parseTime(d.latest_major_action_date);
-    //     d.cosponsors = +d.cosponsors;
-    //     d.sponsor_party = d.sponsor_party;
-    // });
-    // // Scale the range of the data
-    // //   x.domain(d3.extent(data2, function(d) { return d.latest_major_action_date; }));
-    // x.domain([timeBegin, timeEnd]);
-    // y.domain([0, d3.max(data2, function (d) { return d.cosponsors; })]);
-    // //test print
-    // // Add the valueline path.
-    // var bill = chart.append("path")
-    //     .data([data2])
-    //     .attr("class", "line")
-    //     .attr("d", valueline);
-
-    // // Add the scatterplot
-    // var drawdots = chart.selectAll("circle")
-    //     .data(data2)
-    //     .enter().append("circle")
-    //     .attr("r", 5)
-    //     .attr("cx", function (d) { return x(d.latest_major_action_date); })
-    //     .attr("cy", function (d) { return y(d.cosponsors); })
-    //     // .transition()
-    //     // .duration(duration)
-    //     //change color of dot
-    //     .style("fill", function (d) {
-    //         if (d.sponsor_party == "D") { return "darkblue"; }
-    //         else { return "darkred"; }
-    //     })
-    //     .on("mouseover", function (d) {
-    //         div.transition()
-    //             .duration(200)
-    //             .style("opacity", .9);
-    //         //content of tooltip
-    //         div.html(formatTime(d.latest_major_action_date) + "<br/>" + d.sponsor_party + " " + d.cosponsors + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
-    //             .style("left", (d3.event.pageX) + "px")
-    //             .style("top", (d3.event.pageY - 28) + "px");
-    //     });
-    // Add the X Axis
-    //  chart.append("g")
-    //     .attr("class", "axis")
-    //     .attr("transform", "translate(0," + height + ")")
-    //     .call(d3.axisBottom(x)
-    //             .ticks(d3.timeMonth.every(3))
-    //             .tickFormat(d3.timeFormat("%b %Y")))
-    //     .selectAll("text")
-    //       .style("text-anchor", "end")
-    //       .attr("dx", "-.8em")
-    //       .attr("dy", ".15em")
-    //       .attr("transform", "rotate(-65)");
-    // text label for the x axis
-    //   chart.append("text")
-    //         .attr("class", "axislabel")
-    //         .attr("x", width / 2 )
-    //         .attr("y",  height + margin.top + 70)
-    //         .style("text-anchor", "middle")
-    //         .text("Latest Major Action Date");
-    //     // Add the Y Axis
-    //     chart.append("g")
-    //     .call(d3.axisLeft(y));
-    // text label for the y axis
-    //   chart.append("text")
-    //         .attr("class", "axislabel")
-    //         .attr("transform", "rotate(-90)")
-    //         .attr("y", 0 - margin.left)
-    //         .attr("x",0 - (height / 2))
-    //         .attr("dy", "1em")
-    //         .style("text-anchor", "middle")
-    //         .text("Co-Sponsors");
 
     /*	Function to add the info for the next selected location
 Adds the relevent content to info-box and provides a new value for xPosition
@@ -1092,17 +981,54 @@ then animate the locations to their new position based on the updated x scale */
                     //hover to select
                     // Determine if current line is visible
                     // console.log(lineArray);
-                    var active = lineArray[i].active ? false : true,
-                        newOpacity = active ? 0 : 1;
-                    // Hide or show the elements
-                    d3.select(idLineName).style("opacity", newOpacity);
-                    // Update whether or not the elements are active
-                    lineArray[i].active = active;
-                    if (d3.select(idLineName).style("opacity") != 0) {
-                        div.transition()
-                            .duration(200)
-                            .style("opacity", .8);
-                    }
+                    // var active = lineArray[i].active ? false : true,
+                    //     newOpacity = active ? 0 : 1;
+                    // // Hide or show the elements
+                    // d3.select(idLineName).style("opacity", newOpacity);
+                    // // Update whether or not the elements are active
+                    // lineArray[i].active = active;
+                    // if (d3.select(idLineName).style("opacity") != 0) {
+                    //     div.transition()
+                    //         .duration(200)
+                    //         .style("opacity", .8);
+                    // }
+                    chart.selectAll(".line")
+                        .on("mouseover", function (d) {
+                            d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
+                                .style("stroke-width", '6px')
+                                .style("stroke", '#3a3a3a')
+                                .style("z-index", 1000);
+                            var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
+                            d3.selectAll(selectthegraphs)
+                                .style("opacity", 0)
+                                .style("z-index", -1);
+                        })
+                        .on("mouseout", function (d) {
+                            d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
+                                .style("stroke-width", '2px')
+                                .style("stroke", 'lightgrey');
+                            var selectthegraphs = $('.line').not(this);     //select all the rest of the lines, except the one you are hovering on and drop their opacity
+                            d3.selectAll(selectthegraphs)
+                                .style("opacity", 1);
+                        });
+                    // Add the Y Axis
+                    chart.append("g")
+                        .attr("class", "axis")
+                        .call(d3.axisLeft(y))
+                        //tick labels
+                        .selectAll("text")
+                        // .style("fill","white")
+                        ;
+
+                    // text label for the y axis
+                    // chart.append("text")
+                    //     .attr("class", "axislabel")
+                    //     .attr("transform", "rotate(-90)")
+                    //     .attr("y", 0 - marginLeft)
+                    //     .attr("x", 0 - (height / 2))
+                    //     .attr("dy", "1em")
+                    //     .style("text-anchor", "middle")
+                    //     .text("Status");
                 });
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1132,7 +1058,7 @@ but make sure that it is at least 4 px wide */
                     var thisWidth = x(getDate(d.date1.getTime() + 86400000)) - x(d.date1);
 
                     if (thisWidth < 4) {
-                        return 4;
+                        return 2;
                     } else {
                         return thisWidth;
                     }
