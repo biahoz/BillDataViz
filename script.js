@@ -693,63 +693,18 @@ of the SVG in IE */
         showDates.push(point2);
         showDates.push(point3);
 
-
-        // Scale the range of the data
-        // x.domain(d3.extent(data, function (d) {
-        //   return d.introduced_date;
-        //   // return d.date;
-        // }));
         y.domain(['Vetoed', 'Introduced', 'Passed House', 'Passed Senate', 'Enacted']);
 
         // define the line
 
         var lineName = "line" + lineCount.toString();
         var idLineName = "#" + lineName;
-
-        // Add the valueline path.
-        // var bill = chart.append("path")
-        //   .datum(showDates) //pass an array of the dates
-        //   .attr("class", "line")
-        //   .attr("d", valueline)
-        //   .attr("id", lineName);
-
         lineArray.push(valueline);
-
-        // // Add the introduced scatterplot
-        // var drawdots = chart.selectAll("dot")
-        //   // //filter to show only the first and last points
-        //   .data(showDates.filter(function (d, i) { return (d && i == 3) || (d && i == 0); }))
-        //   // .data(showDates)
-        //   .enter().append("circle")
-        //   .attr("r", 5)
-        //   .attr("cx", function (d) { return x(d.date); })
-        //   .attr("cy", function (d) { return y(d.billStatus); })
-        //   //change color of dot
-        //   .style("fill", function (d) {
-        //     if (d.sponsor_party == "D") { return "darkblue"; }
-        //     else { return "darkred"; }
-        //   })
-        // //   hover function
-        //   .on("mouseover", function (d) {
-        //     div.transition()
-        //       .duration(200)
-        //       .style("opacity", .9);
-        //     //content of tooltip
 
         //     //hover to select
         //     // Determine if current line is visible
         var active = lineArray[lineCount].active ? false : true,
             newOpacity = active ? 0 : 1;
-        //      // Hide or show the elements
-        //      d3.select(idLineName).style("opacity", newOpacity);
-        //      // Update whether or not the elements are active
-        //      lineArray[lineCount].active = active;
-        //     if(d3.select(idLineName).style("opacity") != 0){
-        //        div.transition()
-        //            .duration(200)
-        //            .style("opacity", .8);
-        //        }
-        //   });
 
         lineCount++; //increment count
         allshowdata.push(showDates);
@@ -808,7 +763,7 @@ of the SVG in IE */
 
 
             });
-            chart.selectAll(".line")
+        chart.selectAll(".line")
             .on("mouseover", function (d) {
                 d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
                     .style("stroke-width", '6px')
@@ -828,64 +783,47 @@ of the SVG in IE */
                     .style("opacity", 1);
             });
     }
-                                // Add the Y Axis
-                                chart.append("g")
-                                .attr("class", "axis")
-                                .call(d3.axisLeft(y))
-                                //tick labels
-                                .selectAll("text");
-                                // .style("fill","white");
-            
-                            // text label for the y axis
-                            mini.append("text")
-                                .attr("class", "axislabel")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", 0 - marginLeft)
-                                .attr("x", 0 - (0))
-                                .attr("dy", "1em")
-                                .style("text-anchor", "middle")
-                                .text("Enacted");
-                                mini.append("text")
-                                .attr("class", "axislabel")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", 0 - marginLeft)
-                                .attr("x", 0 - (miniHeight / 3))
-                                .attr("dy", "1em")
-                                .style("text-anchor", "middle")
-                                .text("Senate");
-                                mini.append("text")
-                                .attr("class", "axislabel")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", 0 - marginLeft)
-                                .attr("x", 0 - (2* miniHeight / 3))
-                                .attr("dy", "1em")
-                                .style("text-anchor", "middle")
-                                .text("House");
-                                mini.append("text")
-                                .attr("class", "axislabel")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", 0 - marginLeft)
-                                .attr("x", 0 - (miniHeight))
-                                .attr("dy", "1em")
-                                .style("text-anchor", "middle")
-                                .text("Introduced");
+    // Add the Y Axis
+    chart.append("g")
+        .attr("class", "axis")
+        .call(d3.axisLeft(y))
+        //tick labels
+        .selectAll("text");
+    // .style("fill","white");
 
-    // // parse the date / time
-    // var parseTime = d3.timeParse("%Y-%m-%d");
-
-    // //format date data
-    // var formatTime = d3.timeFormat("%Y");
-    // // var x = d3.scaleTime()
-    // // .domain([timeBegin, timeEnd])
-    // // .range([0, width]);
-    // var y = d3.scaleLinear().range([height, 0]);
-
-    // var color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    // // var svg = d3.select(".timeline").append("svg")
-
-    // ////////////////////
-
+    // text label for the y axis
+    mini.append("text")
+        .attr("class", "axislabel")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - marginLeft)
+        .attr("x", 0 - (0))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Enacted");
+    mini.append("text")
+        .attr("class", "axislabel")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - marginLeft)
+        .attr("x", 0 - (miniHeight / 3))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Senate");
+    mini.append("text")
+        .attr("class", "axislabel")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - marginLeft)
+        .attr("x", 0 - (2 * miniHeight / 3))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("House");
+    mini.append("text")
+        .attr("class", "axislabel")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - marginLeft)
+        .attr("x", 0 - (miniHeight))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Introduced");
 
     /*	Function to add the info for the next selected location
 Adds the relevent content to info-box and provides a new value for xPosition
@@ -959,19 +897,6 @@ the current location and the zoom level */
 
         /*	Give the selected location the class of 'selected'
 then animate the locations to their new position based on the updated x scale */
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // bill
-        //     .attr("d", valueline);
-
-
-        // drawdots
-        //     .attr("cx", function (d) { return x(d.latest_major_action_date); })
-        //     .attr("cy", function (d) { return y(d.cosponsors); });
-        // data2.forEach(function (d) {
-        //             bill
-        //     .attr("d", valueline);
-        // })
-        // console.log()
         for (var i = 0; i < allshowdata.length; i++) {
 
             // console.log(allshowdata[i]);
@@ -1002,20 +927,6 @@ then animate the locations to their new position based on the updated x scale */
                     div.html(d.number + "<br/>" + formatTime(d.date) + "<br/>" + d.billStatus + "<br/><a href=\"" + d.govtrack_url + "\" target=\"_blank\">Link</a>")
                         .style("left", (d3.event.pageX + 28) + "px")
                         .style("top", (d3.event.pageY - 28) + "px");
-                    //hover to select
-                    // Determine if current line is visible
-                    // console.log(lineArray);
-                    // var active = lineArray[i].active ? false : true,
-                    //     newOpacity = active ? 0 : 1;
-                    // // Hide or show the elements
-                    // d3.select(idLineName).style("opacity", newOpacity);
-                    // // Update whether or not the elements are active
-                    // lineArray[i].active = active;
-                    // if (d3.select(idLineName).style("opacity") != 0) {
-                    //     div.transition()
-                    //         .duration(200)
-                    //         .style("opacity", .8);
-                    // }
                     chart.selectAll(".line")
                         .on("mouseover", function (d) {
                             d3.select(this)                          //on mouseover of each line, give it a nice thick stroke
@@ -1043,19 +954,8 @@ then animate the locations to their new position based on the updated x scale */
                         .selectAll("text")
                         // .style("fill","white")
                         ;
-
-                    // text label for the y axis
-                    // chart.append("text")
-                    //     .attr("class", "axislabel")
-                    //     .attr("transform", "rotate(-90)")
-                    //     .attr("y", 0 - marginLeft)
-                    //     .attr("x", 0 - (height / 2))
-                    //     .attr("dy", "1em")
-                    //     .style("text-anchor", "middle")
-                    //     .text("Status");
                 });
         }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         locations.classed("selected", false)
             .attr("class", function (d, i) {
@@ -1121,8 +1021,6 @@ but make sure that it is at least 4 px wide */
         }
         // d3.json("test.json", function(error, data) {
         // if (error) throw error;
-
-
 
     }
 
