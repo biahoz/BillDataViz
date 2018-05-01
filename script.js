@@ -281,17 +281,16 @@ rects. Add functionality for hover and click. */
         .attr("transform", "translate(0,0)")
         .style("cursor", "pointer")
         .on("click", function (e) {
-            if (counter > 0) {
-                counter -= 1;
+            if (counter < (items.length - 1)) {
+                counter += 1;
             };
-
             showLocation();
             d3.event.preventDefault();
             return false;
         })
         .on("mouseover", function () {
 
-            if (counter > 0) {
+            if (counter < (items.length - 1)) {
                 d3.select(this).transition()
                     .duration(duration)
                     .style("opacity", 0.5);
@@ -316,8 +315,8 @@ rects. Add functionality for hover and click. */
         .attr("transform", "translate(50,0)")
         .style("cursor", "pointer")
         .on("click", function (e) {
-            if (counter < (items.length - 1)) {
-                counter += 1;
+            if (counter > 0) {
+                counter -= 1;
             };
 
             showLocation();
@@ -326,7 +325,7 @@ rects. Add functionality for hover and click. */
         })
         .on("mouseover", function () {
 
-            if (counter < (items.length - 1)) {
+            if (counter > 0) {
                 d3.select(this).transition()
                     .duration(duration)
                     .style("opacity", 0.5);

@@ -54,7 +54,8 @@ body {
 
 .outerwrapper .info-box {
 	position: relative;
-	top: 400px;
+	top: 350px;
+  left: 750px;
 	width: 630px;
 	height: 320px;
 	opacity: 1;
@@ -197,16 +198,23 @@ body {
 
 div.tooltip {
   position: absolute;
-  text-align: center;
+  text-align: left;
   width: 100px;
   height: 100px;
   padding: 5px;
+  padding-left: 10px;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   background: lightsteelblue;
   border: 0px;
   /*border-radius: 8px*/
   ;
+  /* opacity: 0;
+  -webkit-transition: opacity 0.3s ease;
+  -moz-transition: opacity 0.3s ease;
+  -o-transition: opacity 0.3s ease;
+  -ms-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease; */
 }
 
 /*.axislabel {
@@ -219,7 +227,7 @@ div.tooltip {
 
 
 #container {
-  margin: 50px;
+  margin: 20px;
 }
 
 #subtitle {
