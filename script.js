@@ -837,14 +837,38 @@ of the SVG in IE */
                                 // .style("fill","white");
             
                             // text label for the y axis
-                            chart.append("text")
+                            mini.append("text")
                                 .attr("class", "axislabel")
                                 .attr("transform", "rotate(-90)")
                                 .attr("y", 0 - marginLeft)
-                                .attr("x", 0 - (height / 2))
+                                .attr("x", 0 - (0))
                                 .attr("dy", "1em")
                                 .style("text-anchor", "middle")
-                                .text("Status");
+                                .text("Enacted");
+                                mini.append("text")
+                                .attr("class", "axislabel")
+                                .attr("transform", "rotate(-90)")
+                                .attr("y", 0 - marginLeft)
+                                .attr("x", 0 - (miniHeight / 3))
+                                .attr("dy", "1em")
+                                .style("text-anchor", "middle")
+                                .text("Senate");
+                                mini.append("text")
+                                .attr("class", "axislabel")
+                                .attr("transform", "rotate(-90)")
+                                .attr("y", 0 - marginLeft)
+                                .attr("x", 0 - (2* miniHeight / 3))
+                                .attr("dy", "1em")
+                                .style("text-anchor", "middle")
+                                .text("House");
+                                mini.append("text")
+                                .attr("class", "axislabel")
+                                .attr("transform", "rotate(-90)")
+                                .attr("y", 0 - marginLeft)
+                                .attr("x", 0 - (miniHeight))
+                                .attr("dy", "1em")
+                                .style("text-anchor", "middle")
+                                .text("Introduced");
 
     // // parse the date / time
     // var parseTime = d3.timeParse("%Y-%m-%d");
