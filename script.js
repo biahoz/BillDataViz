@@ -58,7 +58,7 @@ and safari can parse the date */
 
     /* Hides the table and shows the SVG if javascript is enabled */
 
-    $(".outerwrapper span.timeline-heading").text(headline);
+    $(".outerwrapper span.timeline-heading").text(" Hover on a line to see the trajectory of a specific bill, or get more information on a mass shooting event.");
     $(".outerwrapper p.timeline-standfirst").text(standfirst);
     // $(".outerwrapper").css({"display":"block"});
 
@@ -117,7 +117,7 @@ i.e date, headline, the text, image link and credit */
 
         if (items[i].link) {
             $('.outerwrapper div[class="event-' + i + '"]')
-                .append('<p>' + items[i].link + '</p>');
+                .append('<a class="credit" href="' + items[i].link + '">Link</a>');
         }
 
         if (items[i].source) {
@@ -148,7 +148,7 @@ i.e date, headline, the text, image link and credit */
     var height = 600 - marginTop - marginBottom;
     var miniHeight = 400;
     var mainHeight = height - miniHeight - 50;
-    var zoom = 5;
+    var zoom = 10;
     var maxZoom = 10;
     var zoomIncrement = 1;
     var valueline = d3.line()
@@ -157,7 +157,7 @@ i.e date, headline, the text, image link and credit */
         .y(function (d) { return y(d.billStatus); });
 
     /*	A global variable to control which event/location to show */
-    var counter = 0;
+    var counter = 20;
 
     /*	A global variable to control the amout of ticks visible */
     var ticks = 8;
