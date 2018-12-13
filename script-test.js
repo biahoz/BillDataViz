@@ -29,7 +29,7 @@ var items = [];
 
 d3.queue(2)
     .defer(d3.json, "data.json")
-    .defer(d3.json, "allData.json")
+    .defer(d3.json, "billData-Dec18-3.json")
     .await(function (error, file1, file2) { runall(file1, file2); });
 
 function runall(data, data2) {
