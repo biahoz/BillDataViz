@@ -733,7 +733,7 @@ of the SVG in IE */
             //change color of dot
             .style("fill", function (d) {
                 if (d.sponsor_party == "D") { return "darkblue"; }
-                else { return "darkred"; }
+                else { return "darkred"; }   
             }) //Do something
             .on("mouseover", function (d) {
                 div.transition()
